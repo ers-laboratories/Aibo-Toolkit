@@ -1,6 +1,9 @@
+# Import modules
 import mysql.connector
 from nicegui import ElementFilter, app, ui
 from nicegui.events import ValueChangeEventArguments
+# Import modules - END
+# -
 # -
 # -
 # Variables

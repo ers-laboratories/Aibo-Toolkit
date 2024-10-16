@@ -22,10 +22,10 @@ with ui.tabs().classes('w-full') as tabs:
 # -
 # -
 # -
-
+# Tab Panels
 with ui.tab_panels(tabs, value=personalization).classes('w-full'):
+    # Home tab Module
     with ui.tab_panel(home):
-        
         with ui.column():
             with ui.row():
                 with ui.card():
@@ -46,6 +46,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                 # ERS 1000 Stats
                 with ui.card():
                     ui.image('images/a_03.png').classes('w-64').props('fit=scale-down')
+                    ui.chat_message('Hello, nice to see you')
                     with ui.card():
                         with ui.grid(columns=2):
                             ui.label('Connected').style('font-weight: 1000; color: green')
@@ -63,6 +64,9 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                             ui.label('Software:').style('font-weight: 1000')
                             ui.label('5.50')
 
+                            ui.label('Mood:').style('font-weight: 1000')
+                            ui.label('Neutral')
+
             with ui.card():
                 ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
                 with ui.row():
@@ -71,6 +75,10 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                         ui.item('You are using the latest version of the software').style('font-weight: 1000')
                         ui.item('Firmware version: 5.50 MOD')
                         ui.item('App version: 0.8')
+                        with ui.expansion('Release Notes', icon='work').classes('w-full'):
+                            ui.label('Stability update')
+                            ui.label('Security update')
+                ui.button('Check Updates', on_click=lambda: ui.notify('You are using the latest version of the software'))
 
         
         
@@ -98,12 +106,35 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
 
     with ui.tab_panel(personalization):
                 ui.label('Personalization Panel').style('font-size: 200%; font-weight: 1000')
-    
+    # -
+    # -
     with ui.tab_panel(settings):
                 ui.label('Settings Panel').style('font-size: 200%; font-weight: 1000')
-                
                 with ui.card():
-                    
+                    ui.label('Add Aibo:')
+                    with ui.dialog() as dialog, ui.card():
+                        with ui.stepper().props('vertical').classes('w-full') as stepper:
+                            with ui.step('Prepare Aibo'):
+                                ui.label('Switch the network switch to position no.2 ')
+                                ui.image('images/a_08.png').classes('w-80').props('fit=scale-down')
+                                with ui.stepper_navigation():
+                                    ui.button('Next', on_click=stepper.next)
+                            with ui.step('Finding Aibo via WIFI'):
+                                ui.label('Mix the ingredients')
+                                with ui.stepper_navigation():
+                                    ui.button('Next', on_click=stepper.next)
+                                    ui.button('Back', on_click=stepper.previous).props('flat')
+                            with ui.step('Finish'):
+                                ui.label('Bake for 20 minutes')
+                                with ui.stepper_navigation():
+                                    ui.button('Done', on_click=lambda: ui.notify('Yay!', type='positive'))
+                                    ui.button('Back', on_click=stepper.previous).props('flat')
+
+
+
+                    ui.button('Add', on_click=dialog.open)
+
+                with ui.card():
                     ui.label('Dark Mode:')
                     ui.switch('Dark mode').bind_value(dark_mode)
 

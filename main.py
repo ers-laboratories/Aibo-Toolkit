@@ -1,7 +1,13 @@
 import mysql.connector
 from nicegui import ElementFilter, app, ui
 from nicegui.events import ValueChangeEventArguments
-
+# -
+# -
+# Variables
+dark_mode = ui.dark_mode(True)
+# Variables - END
+# -
+# -
 # Top Menu Tabs
 
 with ui.tabs().classes('w-full') as tabs:
@@ -92,12 +98,11 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
     
     with ui.tab_panel(settings):
                 ui.label('Settings Panel').style('font-size: 200%; font-weight: 1000')
+                
                 with ui.card():
-                    dark = ui.dark_mode()
-                    ui.label('Switch mode:')
-                    switch = ui.switch('switch me')
-                    ui.button('Dark', on_click=dark.enable)
-                    ui.button('Light', on_click=dark.disable)
+                    
+                    ui.label('Dark Mode:')
+                    ui.switch('Dark mode').bind_value(dark_mode)
 
 
         

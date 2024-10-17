@@ -1,2 +1,2 @@
 nicegui
-mysql-connector-python
+sqlite3

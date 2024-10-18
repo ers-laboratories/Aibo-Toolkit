@@ -3,8 +3,6 @@ import sqlite3
 from nicegui import ElementFilter, app, ui, native
 from nicegui.events import ValueChangeEventArguments
 from typing import List, Tuple
-import time
-import random
 # Import modules - END
 # -
 # SQL Lite database configure
@@ -36,7 +34,7 @@ dark_mode = ui.dark_mode(True) # Dark mode variable
 
 aibo_image = "images/unitronix.png" # Aibo profile image
 
-battery = "42%" # battery amount
+battery = "42%" # battery amount 
 
 connection_type = "Wi-Fi" # connection type Wifi / Cloud
 
@@ -63,12 +61,13 @@ with ui.tabs().classes('w-full') as tabs:
 # -
 # -
 # Tab Panels
+
 with ui.tab_panels(tabs, value=personalization).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         with ui.column():
-            with ui.row():
-                with ui.card():
+            with ui.row().classes('w-4/4'):
+                with ui.card().classes('w-2/4'):
                     # Main Grid - Welcome grid with app name
                     ui.label('Welcome to Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
                     ui.label('Toolkit to manage your Aibo ERS 1000').style('font-size: 150%;')
@@ -89,7 +88,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                                         subtitle='May 14, 2024')
 
                 # ERS 1000 Stats
-                with ui.card():
+                with ui.card().classes('w-3/4'):
                     ui.chat_message(aibo_daily_message)
                     ui.image(aibo_image).classes('w-full')
                     
@@ -152,19 +151,24 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                     ui.tooltip('AptitudeX').classes('bg-green')
                 
             with ui.card():
-                ui.image('images/DoggiesGalore.png').classes('w-20').props('fit=scale-down')
+                with ui.image('images/DoggiesGalore.png').classes('w-20').props('fit=scale-down'):
+                    ui.tooltip('DoggiesGalore').classes('bg-green')
 
             with ui.card():
-                ui.image('images/ouija.png').classes('w-20').props('fit=scale-down')
+                with ui.image('images/ouija.png').classes('w-20').props('fit=scale-down'):
+                    ui.tooltip('Ouija').classes('bg-green')
             
             with ui.card():
-                ui.image('images/unitronix.png').classes('w-20').props('fit=scale-down')
+                with ui.image('images/unitronix.png').classes('w-20').props('fit=scale-down'):
+                    ui.tooltip('UNITRONIX').classes('bg-green')
 
             with ui.card():
-                ui.image('images/sylva.png').classes('w-20').props('fit=scale-down')
+                with ui.image('images/sylva.png').classes('w-20').props('fit=scale-down'):
+                    ui.tooltip('SylvaTheMoth').classes('bg-green')
 
             with ui.card():
-                ui.image('images/enfair.png').classes('w-20').props('fit=scale-down')
+                with ui.image('images/enfair.png').classes('w-20').props('fit=scale-down'):
+                     ui.tooltip('Enfair Automata').classes('bg-green')
 
     with ui.tab_panel(controls):
                 ui.label('Control Panel').style('font-size: 200%; font-weight: 1000')

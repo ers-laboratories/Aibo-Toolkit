@@ -120,7 +120,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                 # ERS 1000 Stats
                 with ui.card().classes('opacity-95'):
                     ui.chat_message(aibo_daily_message)
-                    ui.image(aibo_image).props('fit=scale-down').classes('w-80 h-80 ')
+                    ui.image(aibo_image).props('fit=scale-down').classes('rounded-full w-80 h-80')
                     with ui.dialog() as dialog, ui.card():
                         # Profile image upload and change
                         ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
@@ -210,8 +210,8 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
 
     # Controls
     with ui.tab_panel(controls):
-        
-                ui.label('Control Panel').style('font-size: 200%; font-weight: 1000')
+        ui.label('Control Panel').style('font-size: 200%; font-weight: 1000')
+
     # Personalization
     with ui.tab_panel(personalization):
                 ui.label('Personalization Panel').style('font-size: 200%; font-weight: 1000')
@@ -233,14 +233,15 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
     # Service
     with ui.tab_panel(service):
                 ui.image('images/116.png').classes('absolute inset-0')
-
+                
+                with ui.card().classes("w-full text-center"):
+                    ui.label('Find Aibo Repair Service:').style('font-size: 200%; font-weight: 1000')
                 #ebi card
-                with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
-                        # ERS 1000 Stats 
+                with ui.row().classes('grid grid-cols-2 w-full opacity-95'): 
                         with ui.card():
-                            ui.label("Eberhard Ebi Suess").style('font-size: 200%; font-weight: 1000;')
+                            ui.label("Eberhard Ebi Suess").style('font-size: 200%; font-weight: 1000')
                             ui.label("Europe: Germany").style('font-size: 130%; font-weight: 1000')
-                            ui.image("images/ebi.png").props('fit=scale-down')
+                            ui.image("images/ebi.png").props('fit=scale-down').classes('w-80 h-80')
                             with ui.card().classes('w-full'):
                                  ui.label("Services offered:").style('font-weight: 1000')
                                  with ui.list().props('dense separator'):
@@ -256,9 +257,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                                     # Facebook
                                     ui.chip('Facebook', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506/user/1489153663/", new_tab=True)).classes("w-1/2")
                                     # -
-                                    ui.chip('FB Group', selectable=True, icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506", new_tab=True)).classes("w-1/2")
-                                    # -
-                                    # Aibo Name box
+                                    ui.chip('FB Group', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506", new_tab=True)).classes("w-1/2")
                                     
                      
     # Settings
@@ -269,13 +268,17 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                     with ui.dialog() as dialog, ui.card():
                         with ui.stepper().props('vertical').classes('w-full') as stepper:
                             with ui.step('Prepare Aibo'):
-                                ui.label('Switch the network switch to position no.2')
-                                ui.image('images/a_08.png').classes('w-80').props('fit=scale-down')
-                                ui.label('Wait for the orange LED to light up')
+                                ui.label('Switch the network switch to position no.2').style('font-size: 120%')
+                                ui.label('See item no.2 in the picture:').style('font-size: 120%')
+                                with ui.card().style("background-color: white").classes('w-full'):
+                                    ui.image("images/tech/wifi_con_1.png").classes('w-full')
+                                ui.label('Wait for the orange LED to light up').style('font-size: 120%')
                                 with ui.stepper_navigation():
                                     ui.button('Next', on_click=stepper.next)
-                            with ui.step('Finding Aibo via WIFI'):
-                                ui.label('Mix the ingredients')
+                            with ui.step('Connecting Aibo to WI-FI network'):
+                                ui.label('Enter your WI-FI network details:').style('font-size: 120%')
+                                ui.input(label='SSDI:').style('font-size: 120%')
+                                ui.input(label='Password:').style('font-size: 120%')
                                 with ui.stepper_navigation():
                                     ui.button('Next', on_click=stepper.next)
                                     ui.button('Back', on_click=stepper.previous).props('flat')

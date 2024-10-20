@@ -35,7 +35,7 @@ daily_message_list = ["I'm up and running!","All systems are a go!","Ready to as
 # Variables for some functions in app
 
 # Aibo API Path
-BASE_PATH = 'https://public.api.aibo.com/v1'
+aibo_api = 'https://public.api.aibo.com/v1'
 
 connection = '1' # Connected status with cloud or app
 
@@ -268,8 +268,11 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                     with ui.dialog() as dialog, ui.card():
                         with ui.stepper().props('vertical').classes('w-full') as stepper:
                             with ui.step('Prepare Aibo'):
+                                ui.label('Open lid from Aibo torso').style('font-size: 120%')
+                                with ui.card().style("background-color: white").classes('w-full'):
+                                    ui.image("images/tech/open_lid.png").classes('w-full')
                                 ui.label('Switch the network switch to position no.2').style('font-size: 120%')
-                                ui.label('See item no.2 in the picture:').style('font-size: 120%')
+                                ui.label('See item no.2 in the picture').style('font-size: 120%')
                                 with ui.card().style("background-color: white").classes('w-full'):
                                     ui.image("images/tech/wifi_con_1.png").classes('w-full')
                                 ui.label('Wait for the orange LED to light up').style('font-size: 120%')
@@ -298,7 +301,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                 with ui.switch('Dark mode ON/OFF').bind_value(dark_mode):
                     ui.tooltip('Enable dark mode').classes('bg-green')
                 # -
-                ui.separator() # separator ui
+                ui.separator() # separator ui 
                 # -
                     
 

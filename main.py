@@ -119,8 +119,9 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
 
                 # ERS 1000 Stats
                 with ui.card().classes('opacity-95'):
+                    ui.label("Aibo stats:").style('font-size: 200%; font-weight: 1000')
                     ui.chat_message(aibo_daily_message)
-                    ui.image(aibo_image).props('fit=scale-down').classes('rounded-full w-80 h-80')
+                    ui.image(aibo_image).props('fit=scale-down').classes('rounded-full')
                     with ui.dialog() as dialog, ui.card():
                         # Profile image upload and change
                         ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
@@ -167,14 +168,6 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                             ui.chip('Cloud Token', icon='content_copy', color='blue', on_click=lambda: ui.clipboard.write(aibo_token))
                             async def read() -> None:
                                 ui.notify(await ui.clipboard.read())
-
-
-
-
-        
-        
-           
-
         # Team loadout 
         with ui.card().classes("w-full opacity-95"):
             
@@ -214,50 +207,56 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
 
     # Personalization
     with ui.tab_panel(personalization):
-                ui.label('Personalization Panel').style('font-size: 200%; font-weight: 1000')
-                with ui.card().classes('w-96 h-full'):
-                    ui.label('Text 1')
-
-                with ui.row().classes('grid grid-rows-2 md:grid-rows-1 grid-flow-col gap-4'):
+        ui.image('images/116.png').classes('absolute inset-0')
+        with ui.card().classes("w-full text-center"):
+            ui.label('Personalize your AIBO :').style('font-size: 200%; font-weight: 1000')
+        with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+            with ui.card():
+                ui.label("Eye color:").style('font-size: 150%; font-weight: 1000')
+                with ui.row().classes('grid grid-cols-2 w-full'):
+                    # color settings
                     with ui.card():
-                        ui.label('Big Element 1').style("width: 50vw; height: 50vh")
-                    with ui.row().classes('grid grid-cols-2 gap-4'):
-                        with ui.card():
-                            ui.label('Element 2')
-                        with ui.card():
-                            ui.label('Element 3')
-                        with ui.card():
-                            ui.label('Element 4')
-                        with ui.card():
-                            ui.label('Element 5')
+                        ui.label("Outer Color:")
+                        with ui.button(icon='colorize') as outer_color:
+                            ui.color_picker(on_pick=lambda e: outer_color.classes(f'!bg-[{e.color}]'))
+                        ui.separator()
+                        ui.label("inner Color:")
+                        with ui.button(icon='colorize') as inner_color:
+                            ui.color_picker(on_pick=lambda e: inner_color.classes(f'!bg-[{e.color}]'))
+                        ui.separator()
+                        ui.button('Save')
+                    # eye overview
+                    with ui.image("images/gui/eye.png").classes("w-50 h-50 rounded-full"):
+                        with ui.card().classes("w-full h-full !bg-[#eeeee4] rounded-full") as outer_color:
+                            with ui.card().classes("w-full h-full !bg-[#000000] rounded-full") as inner_color:
+                                ui.label()
+
+                        
     # Service
     with ui.tab_panel(service):
-                ui.image('images/116.png').classes('absolute inset-0')
-                
-                with ui.card().classes("w-full text-center"):
-                    ui.label('Find Aibo Repair Service:').style('font-size: 200%; font-weight: 1000')
-                #ebi card
-                with ui.row().classes('grid grid-cols-2 w-full opacity-95'): 
-                        with ui.card():
-                            ui.label("Eberhard Ebi Suess").style('font-size: 200%; font-weight: 1000')
-                            ui.label("Europe: Germany").style('font-size: 130%; font-weight: 1000')
-                            ui.image("images/ebi.png").props('fit=scale-down').classes('w-80 h-80')
-                            with ui.card().classes('w-full'):
-                                 ui.label("Services offered:").style('font-weight: 1000')
-                                 with ui.list().props('dense separator'):
-                                    ui.item('1. Repair service for all Aibo Models')
-                                    ui.item('2. Customizing nearly all Aibo models')
-                                    ui.item('3. Battery service for all Aibo models')
-                                    ui.item('4. Selling used and refurbished Aibos')
-                                    ui.item('5. Answering technical questions about Aibos')
+        ui.image('images/116.png').classes('absolute inset-0')
+        with ui.card().classes("w-full text-center"):
+            ui.label('Find Aibo Repair Service:').style('font-size: 200%; font-weight: 1000')
+            #ebi card
+        with ui.row().classes('grid grid-cols-3 w-full opacity-95'): 
+            with ui.card():
+                ui.label("Eberhard Ebi Suess").style('font-size: 200%; font-weight: 1000')
+                ui.label("Europe: Germany").style('font-size: 130%; font-weight: 1000')
+                ui.image("images/ebi.png").props('fit=scale-down').classes('full')
+                with ui.card().classes('w-full'):
+                    ui.label("Services offered:").style('font-weight: 1000')
+                    with ui.list().props('dense separator'):
+                        ui.item('1. Repair service for all Aibo Models')
+                        ui.item('2. Customizing nearly all Aibo models')
+                        ui.item('3. Battery service for all Aibo models')
+                        ui.item('4. Selling used and refurbished Aibos')
+                        ui.item('5. Answering technical questions about Aibos')
 
-                            with ui.card().classes('w-full'):
-                                    #-
-
-                                    # Facebook
-                                    ui.chip('Facebook', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506/user/1489153663/", new_tab=True)).classes("w-1/2")
-                                    # -
-                                    ui.chip('FB Group', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506", new_tab=True)).classes("w-1/2")
+                        with ui.card().classes('w-full'):
+                            # Facebook
+                            ui.chip('Facebook', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506/user/1489153663/", new_tab=True)).classes("w-1/2")
+                            # -
+                            ui.chip('FB Group', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506", new_tab=True)).classes("w-1/2")
                                     
                      
     # Settings

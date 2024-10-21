@@ -3,6 +3,7 @@ import sqlite3
 from nicegui import ElementFilter, app, ui, native, events
 from typing import List, Tuple
 from pathlib import Path
+import random
 import os
 # Import modules - END
 # -
@@ -39,7 +40,7 @@ aibo_api = 'https://public.api.aibo.com/v1'
 
 connection = '1' # Connected status with cloud or app
 
-aibo_daily_message = "Bleep bloop, I'm online!" # Aibo daily message under his image
+aibo_daily_message = random.choice(daily_message_list) # Aibo daily message under his image
 
 dark_mode = ui.dark_mode(True) # Dark mode variable
 
@@ -60,7 +61,6 @@ deviceid = ""
 aibo_token = ""
 
 
-
 # Top Menu Tabs
 
 with ui.tabs().classes('w-full') as tabs:
@@ -77,51 +77,75 @@ with ui.tabs().classes('w-full') as tabs:
 # -
 # Tab Panels
 
-with ui.tab_panels(tabs, value=personalization).classes('w-full'):
+with ui.tab_panels(tabs, value=home).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image('images/116.png').classes('absolute inset-0')
-        with ui.column().classes('w-full'):
-            with ui.row().classes('grid grid-cols-2 w-full'):
-                with ui.column():
-                    with ui.card().style("width: 45vw; height: 60vh").classes('opacity-95'):
-                        # Main Grid - Welcome grid with app name
-                        ui.label('Welcome to Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
-                        ui.label('Toolkit to manage your Aibo ERS 1000').style('font-size: 150%;')
-                        # Main Grid - Welcome grid with app name - Updates timeline
-                        with ui.scroll_area().style("width: 100%; height: 100%"):
-                            with ui.timeline(side='right'):
-                                ui.timeline_entry('Added support for changing Aibo eye color.',
-                                                title='Release of 0.8',
-                                                subtitle='May 18, 2024',
-                                                icon='rocket')
-                                ui.timeline_entry('Added support for changing language.',
-                                                title='Release of 0.3',
-                                                subtitle='May 14, 2024'), 
-                                ui.timeline_entry('Added support for AiboLabs Mod Software.',
-                                                title='Release of 0.1',
-                                                subtitle='May 14, 2024')
-                                ui.timeline_entry(
-                                                title='Release of 0.01',
-                                                subtitle='May 14, 2024')
-                    with ui.card().style("width: 45vw").classes('opacity-95'):
-                            ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
-                            with ui.row():
-                                ui.icon('task_alt', color='green').classes('text-5xl')
-                                with ui.list().props('dense separator'):
+
+        with ui.row().classes('grid grid-cols-2 w-full'):
+            with ui.card().classes('opacity-95 h-full'):
+                # Main Grid - Welcome grid with app name
+                ui.label('Welcome to Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
+                ui.label('Toolkit to manage your Aibo ERS 1000').style('font-size: 150%;')
+                # Main Grid - Welcome grid with app name - Updates timeline
+                with ui.scroll_area().style("width: 100%; height: 100%"):
+                    with ui.timeline(side='right'):
+                        ui.timeline_entry('Added support for changing Aibo eye color.',
+                            title='Release of 0.8',
+                            subtitle='May 18, 2024',
+                            icon='rocket')
+                        ui.timeline_entry('Added support for changing language.',
+                            title='Release of 0.3',
+                            subtitle='May 14, 2024'), 
+                        ui.timeline_entry('Added support for AiboLabs Mod Software.',
+                            title='Release of 0.1',
+                            subtitle='May 14, 2024')
+                        ui.timeline_entry(
+                            title='Release of 0.01',
+                            subtitle='May 14, 2024')
+                        
+                #Update card
+                with ui.card().classes('w-full'):
+                    ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
+                    with ui.row():
+                        ui.icon('task_alt', color='green').classes('text-5xl')
+
+                    with ui.list().props('dense separator'):
                                     ui.item('You are using the latest version of the software').style('font-weight: 1000')
                                     ui.item('Firmware version: 5.50 MOD')
                                     ui.item('App version: 0.8')
-                                    with ui.expansion('Release Notes', icon='work').classes('w-full'):
+
+                    with ui.expansion('Release Notes', icon='work').classes('w-full'):
                                         ui.label('Stability update')
                                         ui.label('Security update')
-                            ui.button('Check Updates', on_click=lambda: ui.notify('You are using the latest version of the software'))
-
-                # ERS 1000 Stats
-                with ui.card().classes('opacity-95'):
+                    ui.button('Check Updates', on_click=lambda: ui.notify('You are using the latest version of the software'))
+                        
+            # ERS 1000 Stats            
+            with ui.card().classes('opacity-95'):
                     ui.label("Aibo stats:").style('font-size: 200%; font-weight: 1000')
                     ui.chat_message(aibo_daily_message)
-                    ui.image(aibo_image).props('fit=scale-down').classes('rounded-full')
+
+                    #aibo image scaling
+                    with ui.card().classes('w-full'):
+                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full')
+
+                    #aibo Vitals
+                    with ui.card().classes('w-full'):
+                        ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
+                        with ui.row().classes('grid grid-cols-3 w-full'):
+                            #Food
+                            with ui.card().classes('w-full'):
+                                with ui.knob(0.8, show_value=False, color='orange').classes('w-full h-full'):
+                                    ui.icon('local_dining').classes('text-2xl')
+                            #Water
+                            with ui.card().classes('w-full'):
+                                with ui.knob(0.5, show_value=False, color='blue').classes('w-full h-full'):
+                                    ui.icon('water_drop').classes('text-2xl')
+                            #Love
+                            with ui.card().classes('w-full'):
+                                with ui.knob(0.5, show_value=False, color='red').classes('w-full h-full'):
+                                    ui.icon('favorite').classes('text-2xl')
+
                     with ui.dialog() as dialog, ui.card():
                         # Profile image upload and change
                         ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
@@ -168,13 +192,15 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                             ui.chip('Cloud Token', icon='content_copy', color='blue', on_click=lambda: ui.clipboard.write(aibo_token))
                             async def read() -> None:
                                 ui.notify(await ui.clipboard.read())
+
+            
         # Team loadout 
         with ui.card().classes("w-full opacity-95"):
             
             ui.label('Our Team:').style('font-weight: 1000')
 
-            with ui.row().classes('grid grid-cols-7 gap-4 w-full'):
-                with ui.card():
+            with ui.row().classes('grid grid-cols-8 gap-4 w-full'):
+                with ui.card().classes('opacity-full'):
                     with ui.image('images/apt.png').props('fit=scale-down'):
                         ui.tooltip('AptitudeX').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
                     
@@ -200,6 +226,10 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                 with ui.card():
                     with ui.image('images/ebi.png').props('fit=scale-down'):
                         ui.tooltip('Ebi (AiboWhisperer)').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+                
+                with ui.card():
+                    with ui.image('images/virtual_paws.png').props('fit=scale-down'):
+                        ui.tooltip('Virtual Paws').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
 
     # Controls
     with ui.tab_panel(controls):
@@ -211,6 +241,8 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
         with ui.card().classes("w-full text-center"):
             ui.label('Personalize your AIBO :').style('font-size: 200%; font-weight: 1000')
         with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+
+            #Aibo eye color picker
             with ui.card():
                 ui.label("Eye color:").style('font-size: 150%; font-weight: 1000')
                 with ui.row().classes('grid grid-cols-2 w-full'):
@@ -226,10 +258,11 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                         ui.separator()
                         ui.button('Save')
                     # eye overview
-                    with ui.image("images/gui/eye.png").classes("w-50 h-50 rounded-full"):
+                    with ui.image("images/gui/eye.png").classes("w-25 h-25 rounded-full"):
                         with ui.card().classes("w-full h-full !bg-[#eeeee4] rounded-full") as outer_color:
                             with ui.card().classes("w-full h-full !bg-[#000000] rounded-full") as inner_color:
                                 ui.label()
+            
 
                         
     # Service

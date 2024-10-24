@@ -1,10 +1,13 @@
 # Import modules
 import sqlite3
+import random
+import os
+from fastapi import Request
 from nicegui import ElementFilter, app, ui, native, events
 from typing import List, Tuple
 from pathlib import Path
-import random
-import os
+from nicegui.elements import markdown
+
 # Import modules - END
 # -
 # Create needed directory with database and for profile image
@@ -27,20 +30,39 @@ cur = con.cursor()
 # SQL Lite database table
 sql = 'create table if not EXISTS settings (id int AUTO_INCREMENT PRIMARY KEY, aibo_image varchar(25), aibo_name varchar(25), aibo_software_ver varchar(25), aibo_mood varchar(25), aibo_deviceid varchar(255), aibo_access_token varchar(255), aibo_language varchar(10), aibo_eyes_color varchar(25), aibo_skin int, aibo_personality varchar(25));'
 # Table - id, aibo_image (image name), aibo_name (Tom), aibo_software_ver (e.g 5.50), aibo_mood, aibo_deviceid, aibo_access_token, aibo_language (eng / jp), aibo_eyes_color (hash), aibo_skin (0-5), aibo_personality (name)
-cur.execute(sql)
+#cur.execute(sql)
 
-# Daily message list
+# Daily message list and function
 daily_message_list = ["I'm up and running!","All systems are a go!","Ready to assist!","Percolating and pondering...","Percolating and pondering...","Just doing robot things.","Optimizing my processes.","Always learning, always growing.","Bleep bloop, I'm online!","I'm feeling a little rusty today.","Robot mode: activated!."]
 
+aibo_daily_message = random.choice(daily_message_list) # Aibo daily message under his image
 
 # Variables for some functions in app
+
+# mobile layout enable/disable
+
+ml_settings = False
+
+home_page_layout = 'grid grid-cols-2 w-full'
+controls_layout = ''
+personalization_layout = 'grid grid-cols-2 w-full opacity-95'
+service_layout = 'grid grid-cols-3 w-full opacity-95'
+@ui.refreshable
+def m_layout():
+    if mobile_layout_switch is True:
+        ui.notify('Yay!', type='positive')
+
+                        
+    elif mobile_layout_switch is False:
+        ui.notify('Yay!', type='positive')
+@ui.refreshable
+def mobile_row_enable():
+    home_row.default_classes('grid grid-cols-1 w-full')
 
 # Aibo API Path
 aibo_api = 'https://public.api.aibo.com/v1'
 
 connection = '1' # Connected status with cloud or app
-
-aibo_daily_message = random.choice(daily_message_list) # Aibo daily message under his image
 
 dark_mode = ui.dark_mode(True) # Dark mode variable
 
@@ -69,20 +91,14 @@ with ui.tabs().classes('w-full') as tabs:
     personalization = ui.tab('Personalization')
     service = ui.tab('Service / Repair')
     settings = ui.tab('Settings')
-    
 
-# Top Menu Tabs - END
-# -
-# -
-# -
+
 # Tab Panels
-
-with ui.tab_panels(tabs, value=home).classes('w-full'):
+with ui.tab_panels(tabs, value=personalization).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image('images/116.png').classes('absolute inset-0')
-
-        with ui.row().classes('grid grid-cols-2 w-full'):
+        with ui.row().classes('grid grid-cols-2 w-full') as home_row:
             with ui.card().classes('opacity-95 h-full'):
                 # Main Grid - Welcome grid with app name
                 ui.label('Welcome to Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
@@ -129,31 +145,34 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                     with ui.card().classes('w-full'):
                         ui.image(aibo_image).props('fit=scale-down').classes('rounded-full')
 
+                    with ui.dialog() as dialog, ui.card():
+                        # Profile image upload and change 
+                        ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
+                        on_rejected=lambda: ui.notify('Rejected!'),
+                        max_file_size=10_000_000).classes('max-w-full').props("accept=.png")
+                        ui.button('Close', on_click=dialog.close)
+                    ui.button('Change image', on_click=dialog.open)
+
                     #aibo Vitals
                     with ui.card().classes('w-full'):
                         ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
                         with ui.row().classes('grid grid-cols-3 w-full'):
                             #Food
                             with ui.card().classes('w-full'):
-                                with ui.knob(0.8, show_value=False, color='orange').classes('w-full h-full'):
-                                    ui.icon('local_dining').classes('text-2xl')
+                                with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
+                                    ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
                             #Water
                             with ui.card().classes('w-full'):
-                                with ui.knob(0.5, show_value=False, color='blue').classes('w-full h-full'):
-                                    ui.icon('water_drop').classes('text-2xl')
+                                with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
+                                    ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
                             #Love
                             with ui.card().classes('w-full'):
-                                with ui.knob(0.5, show_value=False, color='red').classes('w-full h-full'):
-                                    ui.icon('favorite').classes('text-2xl')
+                                with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
+                                    ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
 
-                    with ui.dialog() as dialog, ui.card():
-                        # Profile image upload and change
-                        ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
-                        on_rejected=lambda: ui.notify('Rejected!'),
-                        max_file_size=10_000_000).classes('max-w-full').props("accept=.png")
-                        ui.button('Close', on_click=dialog.close)
+                    
 
-                    ui.button('Change image', on_click=dialog.open)
+                    
                     with ui.card().classes('w-full'):
                         with ui.grid(columns=2):
                             #-
@@ -240,7 +259,7 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
         ui.image('images/116.png').classes('absolute inset-0')
         with ui.card().classes("w-full text-center"):
             ui.label('Personalize your AIBO :').style('font-size: 200%; font-weight: 1000')
-        with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+        with ui.row().classes(personalization_layout):
 
             #Aibo eye color picker
             with ui.card():
@@ -262,10 +281,26 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                         with ui.card().classes("w-full h-full !bg-[#eeeee4] rounded-full") as outer_color:
                             with ui.card().classes("w-full h-full !bg-[#000000] rounded-full") as inner_color:
                                 ui.label()
-            
-
-                        
-    # Service
+            #language change
+            with ui.card():
+                ui.label("Language change:").style('font-size: 150%; font-weight: 1000')
+                with ui.tabs().classes('w-full') as tabs:
+                    ui.tab('h', label='English')
+                    ui.tab('a', label='Japanese')
+                with ui.tab_panels(tabs, value='h').classes('w-full'):
+                    with ui.tab_panel('h'):
+                        with ui.row().classes('grid grid-cols-2 w-full'):
+                            ui.image("images/us.png").classes("rounded-full")
+                            with ui.card():
+                                ui.label('Global English for Aibo')
+                                ui.button('Apply', on_click=lambda: ui.notify('English language applied to Aibo'))
+                    with ui.tab_panel('a'):
+                        with ui.row().classes('grid grid-cols-2 w-full'):
+                            ui.image("images/jp.png").classes("rounded-full")
+                            with ui.card():
+                                ui.label('Global Japanese for Aibo')
+                                ui.button('Apply', on_click=lambda: ui.notify('Japanese language applied to Aibo'))
+    # Service   
     with ui.tab_panel(service):
         ui.image('images/116.png').classes('absolute inset-0')
         with ui.card().classes("w-full text-center"):
@@ -331,12 +366,14 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                 ui.separator() # separator ui
                 # -
                 with ui.switch('Dark mode ON/OFF').bind_value(dark_mode):
-                    ui.tooltip('Enable dark mode').classes('bg-green')
+                    ui.tooltip('Enable dark mode').style('color: green')
                 # -
                 ui.separator() # separator ui 
-                # -
-                    
 
+                with ui.switch('Mobile layout (comming soon)', on_change= lambda: (mobile_row_enable(), mobile_row_enable.refresh())) as mobile_layout_switch:
+                    ui.label('Mobile interface is Enabled!').bind_visibility_from(mobile_layout_switch, 'value').style('color: green')
+                    ui.tooltip('Enable mobile layout for smartphones').classes('bg-green')
+                
         
 #Interface runing command
 ui.run(title='AiboLabs Aibo Toolkit')

@@ -82,6 +82,10 @@ deviceid = ""
 
 aibo_token = ""
 
+background_image_set = 'images/35.png'
+
+aibo_coins = '3000'
+
 
 # Top Menu Tabs
 
@@ -89,6 +93,7 @@ with ui.tabs().classes('w-full') as tabs:
     home = ui.tab('Main Page')
     controls = ui.tab('Controls')
     personalization = ui.tab('Personalization')
+    playful_aibo = ui.tab('Playfull Aibo')
     service = ui.tab('Service / Repair')
     settings = ui.tab('Settings')
 
@@ -97,7 +102,7 @@ with ui.tabs().classes('w-full') as tabs:
 with ui.tab_panels(tabs, value=personalization).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
-        ui.image('images/116.png').classes('absolute inset-0')
+        ui.image(background_image_set).classes('absolute inset-0')
         with ui.row().classes('grid grid-cols-2 w-full') as home_row:
             with ui.card().classes('opacity-95 h-full'):
                 # Main Grid - Welcome grid with app name
@@ -106,20 +111,27 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                 # Main Grid - Welcome grid with app name - Updates timeline
                 with ui.scroll_area().style("width: 100%; height: 100%"):
                     with ui.timeline(side='right'):
-                        ui.timeline_entry('Added support for changing Aibo eye color.',
-                            title='Release of 0.8',
-                            subtitle='May 18, 2024',
+                        ui.timeline_entry('The application was created',
+                            title='First Release Early Alpha',
+                            subtitle='October, 2024',
                             icon='rocket')
-                        ui.timeline_entry('Added support for changing language.',
-                            title='Release of 0.3',
-                            subtitle='May 14, 2024'), 
-                        ui.timeline_entry('Added support for AiboLabs Mod Software.',
-                            title='Release of 0.1',
-                            subtitle='May 14, 2024')
-                        ui.timeline_entry(
-                            title='Release of 0.01',
-                            subtitle='May 14, 2024')
-                        
+                #Background sound
+                with ui.card().classes('w-full'):
+                    ui.label('TVARI - Tokyo Cafe').style('font-weight: 1000; font-size: 120%')
+                    with ui.row().classes('grid grid-cols-1 w-full'):
+                        # background sound
+                        a = ui.audio('sounds/tvari-tokyo-cafe-159065.mp3')
+                        ui.link('Sound Link', 'https://pixabay.com/music/beats-tvari-tokyo-cafe-159065/')
+                            
+                #aibo coins
+                with ui.card().classes('w-full'):
+                    ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
+                    with ui.row():
+                        #aibo coins icon
+                        ui.icon('paid', color='primary').classes('text-5xl')
+                        #aibo coins amount with variable
+                        ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%') 
+
                 #Update card
                 with ui.card().classes('w-full'):
                     ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
@@ -256,7 +268,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
 
     # Personalization
     with ui.tab_panel(personalization):
-        ui.image('images/116.png').classes('absolute inset-0')
+        ui.image(background_image_set).classes('absolute inset-0')
         with ui.card().classes("w-full text-center"):
             ui.label('Personalize your AIBO :').style('font-size: 200%; font-weight: 1000')
         with ui.row().classes(personalization_layout):
@@ -302,7 +314,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                                 ui.button('Apply', on_click=lambda: ui.notify('Japanese language applied to Aibo'))
     # Service   
     with ui.tab_panel(service):
-        ui.image('images/116.png').classes('absolute inset-0')
+        ui.image(background_image_set).classes('absolute inset-0')
         with ui.card().classes("w-full text-center"):
             ui.label('Find Aibo Repair Service:').style('font-size: 200%; font-weight: 1000')
             #ebi card
@@ -365,8 +377,9 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                 # -
                 ui.separator() # separator ui
                 # -
-                with ui.switch('Dark mode ON/OFF').bind_value(dark_mode):
-                    ui.tooltip('Enable dark mode').style('color: green')
+                with ui.switch('Dark mode').bind_value(dark_mode) as dark_mode_switch:
+                    ui.label('Dark Mode Enabled!').bind_visibility_from(dark_mode_switch, 'value').style('color: green')
+                    ui.tooltip('Enable dark mode').classes('bg-green')
                 # -
                 ui.separator() # separator ui 
 

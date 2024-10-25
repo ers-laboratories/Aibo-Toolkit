@@ -99,7 +99,7 @@ with ui.tabs().classes('w-full') as tabs:
 
 
 # Tab Panels
-with ui.tab_panels(tabs, value=personalization).classes('w-full'):
+with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -115,22 +115,28 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                             title='First Release Early Alpha',
                             subtitle='October, 2024',
                             icon='rocket')
-                #Background sound
-                with ui.card().classes('w-full'):
-                    ui.label('TVARI - Tokyo Cafe').style('font-weight: 1000; font-size: 120%')
-                    with ui.row().classes('grid grid-cols-1 w-full'):
-                        # background sound
-                        a = ui.audio('sounds/tvari-tokyo-cafe-159065.mp3')
-                        ui.link('Sound Link', 'https://pixabay.com/music/beats-tvari-tokyo-cafe-159065/')
                             
-                #aibo coins
-                with ui.card().classes('w-full'):
-                    ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
-                    with ui.row():
-                        #aibo coins icon
-                        ui.icon('paid', color='primary').classes('text-5xl')
-                        #aibo coins amount with variable
-                        ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%') 
+                #aibo coins and lvl
+                with ui.row().classes('grid grid-cols-2 w-full'):
+
+                    #aibo coins
+                    with ui.card().classes('w-full h-full'):
+                        ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
+                        with ui.row():
+                            #aibo coins icon
+                            ui.icon('paid', color='primary').classes('text-5xl')
+                            #aibo coins amount with variable
+                            ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%')
+
+                    #aibo lvl
+                    with ui.card().classes('w-full h-full'):
+                        ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%')
+                        with ui.row().classes('grid grid-cols-1 w-full'):
+                            #aibo coins icon
+                            ui.label('Lvl: 1').style('font-weight: 1000; font-size: 120%')
+                            #aibo coins amount with variable
+                            ui.linear_progress()
+                    
 
                 #Update card
                 with ui.card().classes('w-full'):
@@ -268,6 +274,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
 
     # Personalization
     with ui.tab_panel(personalization):
+
         ui.image(background_image_set).classes('absolute inset-0')
         with ui.card().classes("w-full text-center"):
             ui.label('Personalize your AIBO :').style('font-size: 200%; font-weight: 1000')
@@ -312,6 +319,92 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                             with ui.card():
                                 ui.label('Global Japanese for Aibo')
                                 ui.button('Apply', on_click=lambda: ui.notify('Japanese language applied to Aibo'))
+    
+    # Playful Aibo
+    with ui.tab_panel(playful_aibo):
+        ui.image(background_image_set).classes('absolute inset-0')
+        with ui.row().classes('grid grid-cols-2 w-full') as home_row:
+            #left card
+            with ui.card().classes('opacity-95 h-full'):
+                #aibo coins
+                with ui.card().classes('w-full'):
+                    ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
+                    
+                    with ui.row():
+                        #aibo coins icon
+                        ui.icon('paid', color='primary').classes('text-5xl')
+                        #aibo coins amount with variable
+                        ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%')
+
+                #playful tab menu with shops        
+                with ui.tabs().classes('w-full') as playful_tabs:
+                    ui.tab('restaurant', label='Restaurant', icon='restaurant')
+                    ui.tab('toy_shop', label='Toy Shop', icon='toys')
+
+                with ui.tab_panels(playful_tabs, value='restaurant').classes('w-full'):
+                    with ui.tab_panel('restaurant'):
+                        
+                        with ui.row().classes('grid grid-cols-1 w-full'):
+                            #Big Meal
+                            with ui.card():
+                                with ui.row().classes('grid grid-cols-2 w-full'):
+                                    ui.icon('fastfood', color='primary').classes('w-full h-full text-8xl')
+                                    with ui.card():
+                                        #Describe
+                                        ui.label('Large Meal').style('font-weight: 1000; font-size: 120%')
+                                        with ui.list().props('dense separator'):
+                                            ui.item('Food: 100%')
+                                            ui.item('Water: 100%')
+                                            ui.item('Level: +10 points')
+                            #Medium Meal
+                            with ui.card():
+                                with ui.row().classes('grid grid-cols-2 w-full'):
+                                    ui.icon('dinner_dining', color='primary').classes('w-full h-full text-8xl')
+                                    with ui.card():
+                                        #Describe
+                                        ui.label('Medium Meal').style('font-weight: 1000; font-size: 120%')
+                                        with ui.list().props('dense separator'):
+                                            ui.item('Food: 50%')
+                                            ui.item('Water: 50%')
+                                            ui.item('Level: +5 points')
+
+
+                    with ui.tab_panel('toy_shop'):
+                        ui.label('Second tab')    
+
+                        
+            # ERS 1000 Stats            
+            with ui.card().classes('opacity-95'):
+
+                    #aibo image scaling
+                    with ui.card().classes('w-full'):
+                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full')
+
+                    with ui.dialog() as dialog, ui.card():
+                        # Profile image upload and change 
+                        ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
+                        on_rejected=lambda: ui.notify('Rejected!'),
+                        max_file_size=10_000_000).classes('max-w-full').props("accept=.png")
+                        ui.button('Close', on_click=dialog.close)
+
+                    #aibo Vitals
+                    with ui.card().classes('w-full'):
+                        ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
+                        with ui.row().classes('grid grid-cols-3 w-full'):
+                            #Food
+                            with ui.card().classes('w-full'):
+                                with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
+                                    ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                            #Water
+                            with ui.card().classes('w-full'):
+                                with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
+                                    ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                            #Love
+                            with ui.card().classes('w-full'):
+                                with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
+                                    ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+
+
     # Service   
     with ui.tab_panel(service):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -337,8 +430,7 @@ with ui.tab_panels(tabs, value=personalization).classes('w-full'):
                             ui.chip('Facebook', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506/user/1489153663/", new_tab=True)).classes("w-1/2")
                             # -
                             ui.chip('FB Group', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506", new_tab=True)).classes("w-1/2")
-                                    
-                     
+                                                  
     # Settings
     with ui.tab_panel(settings):
                 ui.label('Settings Panel').style('font-size: 200%; font-weight: 1000')

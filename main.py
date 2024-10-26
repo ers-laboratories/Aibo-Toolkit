@@ -9,6 +9,9 @@ from pathlib import Path
 from nicegui.elements import markdown
 
 # Import modules - END
+
+ui.query('.nicegui-content').classes('w-full')
+ui.query('.q-page').classes('flex')
 # -
 # Create needed directory with database and for profile image
 
@@ -47,15 +50,8 @@ home_page_layout = 'grid grid-cols-2 w-full'
 controls_layout = ''
 personalization_layout = 'grid grid-cols-2 w-full opacity-95'
 service_layout = 'grid grid-cols-3 w-full opacity-95'
-@ui.refreshable
-def m_layout():
-    if mobile_layout_switch is True:
-        ui.notify('Yay!', type='positive')
 
-                        
-    elif mobile_layout_switch is False:
-        ui.notify('Yay!', type='positive')
-@ui.refreshable
+
 def mobile_row_enable():
     home_row.default_classes('grid grid-cols-1 w-full')
 
@@ -78,13 +74,13 @@ software_ver = "5.50 (MOD 1.3.3)" # Software version
 
 mood = "Neutral" # Aibo Mood
 
-deviceid = ""
+deviceid = "" # DeviceID
 
-aibo_token = ""
+aibo_token = "" # Cloud Token
 
-background_image_set = 'images/35.png'
+background_image_set = 'images/background/35.png' # Background image
 
-aibo_coins = '3000'
+aibo_coins = '3000' #Aibo Coins
 
 
 # Top Menu Tabs
@@ -99,7 +95,7 @@ with ui.tabs().classes('w-full') as tabs:
 
 
 # Tab Panels
-with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
+with ui.tab_panels(tabs, value=settings).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -109,12 +105,6 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                 ui.label('Welcome to Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
                 ui.label('Toolkit to manage your Aibo ERS 1000').style('font-size: 150%;')
                 # Main Grid - Welcome grid with app name - Updates timeline
-                with ui.scroll_area().style("width: 100%; height: 100%"):
-                    with ui.timeline(side='right'):
-                        ui.timeline_entry('The application was created',
-                            title='First Release Early Alpha',
-                            subtitle='October, 2024',
-                            icon='rocket')
                             
                 #aibo coins and lvl
                 with ui.row().classes('grid grid-cols-2 w-full'):
@@ -160,8 +150,8 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                     ui.chat_message(aibo_daily_message)
 
                     #aibo image scaling
-                    with ui.card().classes('w-full'):
-                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full')
+                    with ui.card().classes('w-full justify-center').style('text-align: center'):
+                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full ').style('height: 50%; width: 50%; text-align: center')
 
                     with ui.dialog() as dialog, ui.card():
                         # Profile image upload and change 
@@ -178,15 +168,15 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                             #Food
                             with ui.card().classes('w-full'):
                                 with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
-                                    ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                    ui.icon('local_dining', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
                             #Water
                             with ui.card().classes('w-full'):
                                 with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
-                                    ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                    ui.icon('water_drop', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
                             #Love
                             with ui.card().classes('w-full'):
                                 with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
-                                    ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                    ui.icon('favorite', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
 
                     
 
@@ -342,32 +332,38 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                     ui.tab('toy_shop', label='Toy Shop', icon='toys')
 
                 with ui.tab_panels(playful_tabs, value='restaurant').classes('w-full'):
-                    with ui.tab_panel('restaurant'):
+                    
+                    with ui.tab_panel('restaurant').classes('h-full'):
                         
                         with ui.row().classes('grid grid-cols-1 w-full'):
-                            #Big Meal
-                            with ui.card():
-                                with ui.row().classes('grid grid-cols-2 w-full'):
-                                    ui.icon('fastfood', color='primary').classes('w-full h-full text-8xl')
-                                    with ui.card():
-                                        #Describe
-                                        ui.label('Large Meal').style('font-weight: 1000; font-size: 120%')
-                                        with ui.list().props('dense separator'):
-                                            ui.item('Food: 100%')
-                                            ui.item('Water: 100%')
-                                            ui.item('Level: +10 points')
-                            #Medium Meal
-                            with ui.card():
-                                with ui.row().classes('grid grid-cols-2 w-full'):
-                                    ui.icon('dinner_dining', color='primary').classes('w-full h-full text-8xl')
-                                    with ui.card():
-                                        #Describe
-                                        ui.label('Medium Meal').style('font-weight: 1000; font-size: 120%')
-                                        with ui.list().props('dense separator'):
-                                            ui.item('Food: 50%')
-                                            ui.item('Water: 50%')
-                                            ui.item('Level: +5 points')
+                            with ui.scroll_area().classes('w-full'):
+                                #Big Meal
+                                with ui.card().classes('w-full').style('height: 100%'):
+                                    with ui.row().classes('grid grid-cols-2 w-full'):
+                                        ui.icon('fastfood', color='primary').classes('w-full h-full text-8xl')
+                                        with ui.card():
+                                            #Describe
+                                            ui.label('Large Meal').style('font-weight: 1000; font-size: 120%')
+                                            with ui.list().props('dense separator'):
+                                                ui.item('Food: 100%')
+                                                ui.item('Water: 100%')
+                                                ui.item('Level: +10 points')
+                                            ui.separator()
+                                            ui.button('Buy').classes('w-full')
 
+                                #Medium Meal
+                                with ui.card().classes('w-full'):
+                                    with ui.row().classes('grid grid-cols-2 w-full'):
+                                        ui.icon('dinner_dining', color='primary').classes('w-full h-full text-8xl')
+                                        with ui.card():
+                                            #Describe
+                                            ui.label('Medium Meal').style('font-weight: 1000; font-size: 120%')
+                                            with ui.list().props('dense separator'):
+                                                ui.item('Food: 50%')
+                                                ui.item('Water: 50%')
+                                                ui.item('Level: +5 points')
+                                            ui.separator()
+                                            ui.button('Buy').classes('w-full')
 
                     with ui.tab_panel('toy_shop'):
                         ui.label('Second tab')    
@@ -391,19 +387,21 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                     with ui.card().classes('w-full'):
                         ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
                         with ui.row().classes('grid grid-cols-3 w-full'):
+
                             #Food
                             with ui.card().classes('w-full'):
                                 with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
                                     ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                            
                             #Water
                             with ui.card().classes('w-full'):
                                 with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
                                     ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                            
                             #Love
                             with ui.card().classes('w-full'):
                                 with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
                                     ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
-
 
     # Service   
     with ui.tab_panel(service):
@@ -411,7 +409,7 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
         with ui.card().classes("w-full text-center"):
             ui.label('Find Aibo Repair Service:').style('font-size: 200%; font-weight: 1000')
             #ebi card
-        with ui.row().classes('grid grid-cols-3 w-full opacity-95'): 
+        with ui.row().classes('grid grid-cols-2 w-full opacity-95'): 
             with ui.card():
                 ui.label("Eberhard Ebi Suess").style('font-size: 200%; font-weight: 1000')
                 ui.label("Europe: Germany").style('font-size: 130%; font-weight: 1000')
@@ -434,51 +432,28 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
     # Settings
     with ui.tab_panel(settings):
                 ui.label('Settings Panel').style('font-size: 200%; font-weight: 1000')
-                with ui.column():
-                    ui.label('Add Aibo to app:')
-                    with ui.dialog() as dialog, ui.card():
-                        with ui.stepper().props('vertical').classes('w-full') as stepper:
-                            with ui.step('Prepare Aibo'):
-                                ui.label('Open lid from Aibo torso').style('font-size: 120%')
-                                with ui.card().style("background-color: white").classes('w-full'):
-                                    ui.image("images/tech/open_lid.png").classes('w-full')
-                                ui.label('Switch the network switch to position no.2').style('font-size: 120%')
-                                ui.label('See item no.2 in the picture').style('font-size: 120%')
-                                with ui.card().style("background-color: white").classes('w-full'):
-                                    ui.image("images/tech/wifi_con_1.png").classes('w-full')
-                                ui.label('Wait for the orange LED to light up').style('font-size: 120%')
-                                with ui.stepper_navigation():
-                                    ui.button('Next', on_click=stepper.next)
-                            with ui.step('Connecting Aibo to WI-FI network'):
-                                ui.label('Enter your WI-FI network details:').style('font-size: 120%')
-                                ui.input(label='SSDI:').style('font-size: 120%')
-                                ui.input(label='Password:').style('font-size: 120%')
-                                with ui.stepper_navigation():
-                                    ui.button('Next', on_click=stepper.next)
-                                    ui.button('Back', on_click=stepper.previous).props('flat')
-                            with ui.step('Finish'):
-                                ui.label('Bake for 20 minutes')
-                                with ui.stepper_navigation():
-                                    ui.button('Done', on_click=lambda: ui.notify('Yay!', type='positive'))
-                                    ui.button('Back', on_click=stepper.previous).props('flat')
-
-
-
-                    with ui.button('Add', on_click=dialog.open):
-                        ui.tooltip('Configure Your Aibo to App').classes('bg-green')
-                # -
-                ui.separator() # separator ui
-                # -
+                #Dark mode switch
                 with ui.switch('Dark mode').bind_value(dark_mode) as dark_mode_switch:
                     ui.label('Dark Mode Enabled!').bind_visibility_from(dark_mode_switch, 'value').style('color: green')
                     ui.tooltip('Enable dark mode').classes('bg-green')
-                # -
-                ui.separator() # separator ui 
 
-                with ui.switch('Mobile layout (comming soon)', on_change= lambda: (mobile_row_enable(), mobile_row_enable.refresh())) as mobile_layout_switch:
+                ui.separator() # separator ui
+
+                #Mobile layout switch
+                with ui.switch('Mobile layout (comming soon)', value=False, on_change= lambda: ui.navigate.reload()) as mobile_layout_switch:
                     ui.label('Mobile interface is Enabled!').bind_visibility_from(mobile_layout_switch, 'value').style('color: green')
                     ui.tooltip('Enable mobile layout for smartphones').classes('bg-green')
                 
+                ui.separator()
+
+                #GUI Primary color changer
+                ui.label('GUI Primary color')
+                with ui.button(icon='colorize'):
+                    ui.color_picker(on_pick=lambda e: ui.colors(primary =f'{e.color}'))
+
+                ui.separator() # separator ui
+
+
         
 #Interface runing command
 ui.run(title='AiboLabs Aibo Toolkit')

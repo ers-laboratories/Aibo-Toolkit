@@ -7,33 +7,20 @@ from nicegui import ElementFilter, app, ui, native, events
 from typing import List, Tuple
 from pathlib import Path
 from nicegui.elements import markdown
+from datetime import date
 
-# Import modules - END
+#Font add module for NiceGui
+app.add_static_file(local_file='fonts/Comfortaa.ttf', url_path='/fonts/Comfortaa.ttf')
+
 
 ui.query('.nicegui-content').classes('w-full')
 ui.query('.q-page').classes('flex')
-# -
-# Create needed directory with database and for profile image
 
-dir_1 = os.path.exists("bin") #Bin folder with database
-dir_2 = os.path.exists("images/profile") #Folder will contain profile image for aibo
-
-if not dir_1:
-    os.makedirs("bin") #if folder doesn't exist, create him
-
-if not dir_2:
-     os.makedirs("images/profile") #if folder doesn't exist, create him
-# -
 # SQL Lite database configure
 
-con = sqlite3.connect("bin/aibo_app.db")
+conn = sqlite3.connect("bin/aibo_app.db")
 
-cur = con.cursor()
-
-# SQL Lite database table
-sql = 'create table if not EXISTS settings (id int AUTO_INCREMENT PRIMARY KEY, aibo_image varchar(25), aibo_name varchar(25), aibo_software_ver varchar(25), aibo_mood varchar(25), aibo_deviceid varchar(255), aibo_access_token varchar(255), aibo_language varchar(10), aibo_eyes_color varchar(25), aibo_skin int, aibo_personality varchar(25));'
-# Table - id, aibo_image (image name), aibo_name (Tom), aibo_software_ver (e.g 5.50), aibo_mood, aibo_deviceid, aibo_access_token, aibo_language (eng / jp), aibo_eyes_color (hash), aibo_skin (0-5), aibo_personality (name)
-#cur.execute(sql)
+cur = conn.cursor()
 
 # Daily message list and function
 daily_message_list = ["I'm up and running!","All systems are a go!","Ready to assist!","Percolating and pondering...","Percolating and pondering...","Just doing robot things.","Optimizing my processes.","Always learning, always growing.","Bleep bloop, I'm online!","I'm feeling a little rusty today.","Robot mode: activated!."]
@@ -44,19 +31,23 @@ aibo_daily_message = random.choice(daily_message_list) # Aibo daily message unde
 
 # mobile layout enable/disable
 
+ml_switch = ['grid grid-cols-1 w-full opacity-95', 'grid grid-cols-2 w-full opacity-95', 'grid grid-cols-3 w-full opacity-95']
+
 ml_settings = False
 
-home_page_layout = 'grid grid-cols-2 w-full'
+home_page_layout = 'grid grid-cols-2 w-full opacity-95'
 controls_layout = ''
 personalization_layout = 'grid grid-cols-2 w-full opacity-95'
 service_layout = 'grid grid-cols-3 w-full opacity-95'
 
+def mobile_enable():
+    home_page_layout = ''
 
-def mobile_row_enable():
-    home_row.default_classes('grid grid-cols-1 w-full')
-
-# Aibo API Path
-aibo_api = 'https://public.api.aibo.com/v1'
+def mobile_disable():
+    home_page_layout = 'grid grid-cols-2 w-full'
+    controls_layout = ''
+    personalization_layout = 'grid grid-cols-2 w-full opacity-95'
+    service_layout = 'grid grid-cols-2 w-full opacity-95'
 
 connection = '1' # Connected status with cloud or app
 
@@ -84,6 +75,14 @@ aibo_coins = '3000' #Aibo Coins
 
 
 # Top Menu Tabs
+ui.add_head_html('''
+<style>
+@font-face {
+    font-family: 'Comfortaa';
+    src: url('fonts/Comfortaa.ttf') format('truetype');
+}
+</style>
+''')
 
 with ui.tabs().classes('w-full') as tabs:
     home = ui.tab('Main Page')
@@ -95,15 +94,15 @@ with ui.tabs().classes('w-full') as tabs:
 
 
 # Tab Panels
-with ui.tab_panels(tabs, value=settings).classes('w-full'):
+with ui.tab_panels(tabs, value=home).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
-        with ui.row().classes('grid grid-cols-2 w-full') as home_row:
+        with ui.row().classes(home_page_layout) as home_row:
             with ui.card().classes('opacity-95 h-full'):
                 # Main Grid - Welcome grid with app name
-                ui.label('Welcome to Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
-                ui.label('Toolkit to manage your Aibo ERS 1000').style('font-size: 150%;')
+                ui.label('Welcome to aibo Toolkit').style('font-size: 200%; font-weight: 1000; font-family: Comfortaa')
+                ui.label('Toolkit to manage your Aibo ERS 1000').style('font-size: 150%; font-family: Comfortaa')
                 # Main Grid - Welcome grid with app name - Updates timeline
                             
                 #aibo coins and lvl
@@ -111,26 +110,25 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                     #aibo coins
                     with ui.card().classes('w-full h-full'):
-                        ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
+                        ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%;')
                         with ui.row():
                             #aibo coins icon
                             ui.icon('paid', color='primary').classes('text-5xl')
                             #aibo coins amount with variable
-                            ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%')
+                            ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%;')
 
                     #aibo lvl
                     with ui.card().classes('w-full h-full'):
-                        ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%')
+                        ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%;')
                         with ui.row().classes('grid grid-cols-1 w-full'):
                             #aibo coins icon
                             ui.label('Lvl: 1').style('font-weight: 1000; font-size: 120%')
                             #aibo coins amount with variable
                             ui.linear_progress()
-                    
 
                 #Update card
                 with ui.card().classes('w-full'):
-                    ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
+                    ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%;')
                     with ui.row():
                         ui.icon('task_alt', color='green').classes('text-5xl')
 
@@ -151,7 +149,8 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                     #aibo image scaling
                     with ui.card().classes('w-full justify-center').style('text-align: center'):
-                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full ').style('height: 50%; width: 50%; text-align: center')
+                        with ui.row().classes('grid grid-cols-2 w-full'):
+                            ui.image(aibo_image).props('fit=scale-down').classes('rounded-full ')
 
                     with ui.dialog() as dialog, ui.card():
                         # Profile image upload and change 
@@ -177,10 +176,8 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
                             with ui.card().classes('w-full'):
                                 with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
                                     ui.icon('favorite', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
-
                     
-
-                    
+                    #aibo stats card
                     with ui.card().classes('w-full'):
                         with ui.grid(columns=2):
                             #-
@@ -439,12 +436,13 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                 ui.separator() # separator ui
 
-                #Mobile layout switch
-                with ui.switch('Mobile layout (comming soon)', value=False, on_change= lambda: ui.navigate.reload()) as mobile_layout_switch:
-                    ui.label('Mobile interface is Enabled!').bind_visibility_from(mobile_layout_switch, 'value').style('color: green')
+                #Mobile layout switch    
+                with ui.dropdown_button('Interface Mode'):
+                    ui.item('Desktop', on_click=lambda: (ui.notify('Desktop Mode is Enabled!'),mobile_enable))
+                    ui.item('Mobile', on_click=lambda: ui.notify('Mobile Mode is Enabled!'))
                     ui.tooltip('Enable mobile layout for smartphones').classes('bg-green')
-                
-                ui.separator()
+                    
+                ui.separator() # separator ui
 
                 #GUI Primary color changer
                 ui.label('GUI Primary color')
@@ -457,3 +455,4 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
         
 #Interface runing command
 ui.run(title='AiboLabs Aibo Toolkit')
+

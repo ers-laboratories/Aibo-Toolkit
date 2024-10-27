@@ -8,19 +8,22 @@ from typing import List, Tuple
 from pathlib import Path
 from nicegui.elements import markdown
 from datetime import date
+import pickle
+from starlette.routing import Mount
+from starlette.staticfiles import StaticFiles
+
+# Create data file
+
 
 #Font add module for NiceGui
 app.add_static_file(local_file='fonts/Comfortaa.ttf', url_path='/fonts/Comfortaa.ttf')
 
+app.add_static_files('/images/background', '.')
 
 ui.query('.nicegui-content').classes('w-full')
 ui.query('.q-page').classes('flex')
 
 # SQL Lite database configure
-
-conn = sqlite3.connect("bin/aibo_app.db")
-
-cur = conn.cursor()
 
 # Daily message list and function
 daily_message_list = ["I'm up and running!","All systems are a go!","Ready to assist!","Percolating and pondering...","Percolating and pondering...","Just doing robot things.","Optimizing my processes.","Always learning, always growing.","Bleep bloop, I'm online!","I'm feeling a little rusty today.","Robot mode: activated!."]
@@ -33,15 +36,15 @@ aibo_daily_message = random.choice(daily_message_list) # Aibo daily message unde
 
 ml_switch = ['grid grid-cols-1 w-full opacity-95', 'grid grid-cols-2 w-full opacity-95', 'grid grid-cols-3 w-full opacity-95']
 
-ml_settings = False
 
-home_page_layout = 'grid grid-cols-2 w-full opacity-95'
+home_page_layout = ml_switch[1]
 controls_layout = ''
-personalization_layout = 'grid grid-cols-2 w-full opacity-95'
-service_layout = 'grid grid-cols-3 w-full opacity-95'
+personalization_layout = ml_switch[1]
+service_layout = ml_switch[2]
 
 def mobile_enable():
-    home_page_layout = ''
+    home_page_layout = ml_switch[0]
+    ui.navigate.reload()
 
 def mobile_disable():
     home_page_layout = 'grid grid-cols-2 w-full'
@@ -73,6 +76,16 @@ background_image_set = 'images/background/35.png' # Background image
 
 aibo_coins = '3000' #Aibo Coins
 
+if os.path.exists('data.pkl'):
+    print('File exist')
+else:
+    print('File does not exist')
+    with open('data.pkl', 'wb') as file: 
+        pickle.dump(ml_switch, file)
+
+#Save variables to pickle file
+
+
 
 # Top Menu Tabs
 ui.add_head_html('''
@@ -94,7 +107,7 @@ with ui.tabs().classes('w-full') as tabs:
 
 
 # Tab Panels
-with ui.tab_panels(tabs, value=home).classes('w-full'):
+with ui.tab_panels(tabs, value=settings).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -102,7 +115,7 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
             with ui.card().classes('opacity-95 h-full'):
                 # Main Grid - Welcome grid with app name
                 ui.label('Welcome to aibo Toolkit').style('font-size: 200%; font-weight: 1000; font-family: Comfortaa')
-                ui.label('Toolkit to manage your Aibo ERS 1000').style('font-size: 150%; font-family: Comfortaa')
+                ui.label('Toolkit to manage your aibo ERS-1000').style('font-size: 150%; font-family: Comfortaa')
                 # Main Grid - Welcome grid with app name - Updates timeline
                             
                 #aibo coins and lvl
@@ -144,8 +157,8 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                         
             # ERS 1000 Stats            
             with ui.card().classes('opacity-95'):
-                    ui.label("Aibo stats:").style('font-size: 200%; font-weight: 1000')
-                    ui.chat_message(aibo_daily_message)
+                    ui.label("Aibo stats:").style('font-size: 200%; font-weight: 1000; font-family: Comfortaa')
+                    ui.chat_message(aibo_daily_message).style('font-size: 150%; font-family: Comfortaa')
 
                     #aibo image scaling
                     with ui.card().classes('w-full justify-center').style('text-align: center'):
@@ -451,6 +464,19 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
 
                 ui.separator() # separator ui
 
+                ui.label('Change Background image')
+                with ui.dialog() as bg_changer, ui.card():
+                    with ui.carousel(animated=True, arrows=True, navigation=True):
+                        with ui.carousel_slide().classes('p-0'):
+                            ui.image('images/background/35.png').classes('w-[500px] h-[500px]')
+                            ui.button('Select', on_click=bg_changer.close)
+                        with ui.carousel_slide().classes('p-0'):
+                            ui.image('images/background/116.png').classes('w-[500px] h-[500px]')
+                            ui.button('Select', on_click=bg_changer.close)
+                        with ui.carousel_slide().classes('p-0'):
+                            ui.image('images/background/14.png').classes('w-[500px] h-[500px]')
+                            ui.button('Select', on_click=bg_changer.close)
+                ui.button('Open a dialog', on_click=bg_changer.open)
 
         
 #Interface runing command

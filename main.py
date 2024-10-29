@@ -1,5 +1,5 @@
 # Import modules
-import sqlite3
+
 import random
 import os
 from fastapi import Request
@@ -98,24 +98,24 @@ ui.add_head_html('''
 ''')
 
 with ui.tabs().classes('w-full') as tabs:
-    home = ui.tab('Main Page')
-    controls = ui.tab('Controls')
-    personalization = ui.tab('Personalization')
-    playful_aibo = ui.tab('Playfull Aibo')
-    service = ui.tab('Service / Repair')
-    settings = ui.tab('Settings')
+    home = ui.tab('Main Page').style('font-size: 200%; font-weight: 1000')
+    controls = ui.tab('Controls').style('font-size: 200%; font-weight: 1000')
+    personalization = ui.tab('Personalization').style('font-size: 200%; font-weight: 1000')
+    playful_aibo = ui.tab('Playfull Aibo').style('font-size: 200%; font-weight: 1000')
+    service = ui.tab('Service / Repair').style('font-size: 200%; font-weight: 1000')
+    settings = ui.tab('Settings').style('font-size: 200%; font-weight: 1000')
 
 
 # Tab Panels
-with ui.tab_panels(tabs, value=settings).classes('w-full'):
+with ui.tab_panels(tabs, value=home).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
         with ui.row().classes(home_page_layout) as home_row:
             with ui.card().classes('opacity-95 h-full'):
                 # Main Grid - Welcome grid with app name
-                ui.label('Welcome to aibo Toolkit').style('font-size: 200%; font-weight: 1000; font-family: Comfortaa')
-                ui.label('Toolkit to manage your aibo ERS-1000').style('font-size: 150%; font-family: Comfortaa')
+                ui.label('Welcome to aibo Toolkit').style('font-size: 200%; font-weight: 1000')
+                ui.label('Toolkit to manage your aibo ERS-1000').style('font-size: 150%')
                 # Main Grid - Welcome grid with app name - Updates timeline
                             
                 #aibo coins and lvl
@@ -123,7 +123,7 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                     #aibo coins
                     with ui.card().classes('w-full h-full'):
-                        ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%;')
+                        ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
                         with ui.row():
                             #aibo coins icon
                             ui.icon('paid', color='primary').classes('text-5xl')
@@ -132,7 +132,7 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                     #aibo lvl
                     with ui.card().classes('w-full h-full'):
-                        ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%;')
+                        ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%')
                         with ui.row().classes('grid grid-cols-1 w-full'):
                             #aibo coins icon
                             ui.label('Lvl: 1').style('font-weight: 1000; font-size: 120%')
@@ -141,24 +141,23 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                 #Update card
                 with ui.card().classes('w-full'):
-                    ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%;')
+                    ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
                     with ui.row():
                         ui.icon('task_alt', color='green').classes('text-5xl')
 
                     with ui.list().props('dense separator'):
-                                    ui.item('You are using the latest version of the software').style('font-weight: 1000')
-                                    ui.item('Firmware version: 5.50 MOD')
-                                    ui.item('App version: 0.8')
+                        ui.item('You are using the latest version of the software').style('font-weight: 1000')
+                        ui.item('Firmware version: 5.50 MOD')
+                        ui.item('App version: 0.8')
 
                     with ui.expansion('Release Notes', icon='work').classes('w-full'):
                                         ui.label('Stability update')
                                         ui.label('Security update')
                     ui.button('Check Updates', on_click=lambda: ui.notify('You are using the latest version of the software'))
-                        
             # ERS 1000 Stats            
             with ui.card().classes('opacity-95'):
-                    ui.label("Aibo stats:").style('font-size: 200%; font-weight: 1000; font-family: Comfortaa')
-                    ui.chat_message(aibo_daily_message).style('font-size: 150%; font-family: Comfortaa')
+                    ui.label("Aibo stats:").style('font-size: 200%; font-weight: 1000')
+                    ui.chat_message(aibo_daily_message).style('font-size: 150%')
 
                     #aibo image scaling
                     with ui.card().classes('w-full justify-center').style('text-align: center'):
@@ -171,7 +170,7 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
                         on_rejected=lambda: ui.notify('Rejected!'),
                         max_file_size=10_000_000).classes('max-w-full').props("accept=.png")
                         ui.button('Close', on_click=dialog.close)
-                    ui.button('Change image', on_click=dialog.open)
+                    ui.button('Change image', on_click=dialog.open).style('font-weight: 1000')
 
                     #aibo Vitals
                     with ui.card().classes('w-full'):
@@ -224,9 +223,9 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
                             ui.separator() # separator ui
                             ui.label()
 
-                            ui.chip('Device ID', icon='content_copy', color='blue', on_click=lambda: ui.clipboard.write(deviceid))
+                            ui.chip('Device ID', icon='content_copy', on_click=lambda: ui.clipboard.write(deviceid)).style('font-weight: 1000')
 
-                            ui.chip('Cloud Token', icon='content_copy', color='blue', on_click=lambda: ui.clipboard.write(aibo_token))
+                            ui.chip('Cloud Token', icon='content_copy', on_click=lambda: ui.clipboard.write(aibo_token)).style('font-weight: 1000')
                             async def read() -> None:
                                 ui.notify(await ui.clipboard.read())
 
@@ -255,7 +254,7 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                 with ui.card():
                     with ui.image('images/sylva.png').props('fit=scale-down'):
-                        ui.tooltip('SylvaTheMoth').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+                        ui.tooltip('I Forgor').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
 
                 with ui.card():
                     with ui.image('images/enfair.png').props('fit=scale-down'):
@@ -323,8 +322,41 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
     # Playful Aibo
     with ui.tab_panel(playful_aibo):
         ui.image(background_image_set).classes('absolute inset-0')
-        with ui.row().classes('grid grid-cols-2 w-full') as home_row:
-            #left card
+        with ui.row().classes('grid grid-cols-1 w-full') as home_row:          
+            # ERS 1000 Stats            
+            with ui.card().classes('opacity-95'):
+
+                    #aibo image scaling
+                    with ui.card().classes('w-full'):
+                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full').style('height: 400px')
+
+                    with ui.dialog() as dialog, ui.card():
+                        # Profile image upload and change 
+                        ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
+                        on_rejected=lambda: ui.notify('Rejected!'),
+                        max_file_size=10_000_000).classes('max-w-full').props("accept=.png")
+                        ui.button('Close', on_click=dialog.close)
+
+                    #aibo Vitals
+                    with ui.card().classes('w-full'):
+                        ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
+                        with ui.row().classes('grid grid-cols-3 w-full'):
+
+                            #Food
+                            with ui.card().classes('w-full'):
+                                with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
+                                    ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                            
+                            #Water
+                            with ui.card().classes('w-full'):
+                                with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
+                                    ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                            
+                            #Love
+                            with ui.card().classes('w-full'):
+                                with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
+                                    ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                 #left card
             with ui.card().classes('opacity-95 h-full'):
                 #aibo coins
                 with ui.card().classes('w-full'):
@@ -378,41 +410,7 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
                     with ui.tab_panel('toy_shop'):
                         ui.label('Second tab')    
 
-                        
-            # ERS 1000 Stats            
-            with ui.card().classes('opacity-95'):
-
-                    #aibo image scaling
-                    with ui.card().classes('w-full'):
-                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full')
-
-                    with ui.dialog() as dialog, ui.card():
-                        # Profile image upload and change 
-                        ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
-                        on_rejected=lambda: ui.notify('Rejected!'),
-                        max_file_size=10_000_000).classes('max-w-full').props("accept=.png")
-                        ui.button('Close', on_click=dialog.close)
-
-                    #aibo Vitals
-                    with ui.card().classes('w-full'):
-                        ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
-                        with ui.row().classes('grid grid-cols-3 w-full'):
-
-                            #Food
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
-                                    ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
-                            
-                            #Water
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
-                                    ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
-                            
-                            #Love
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
-                                    ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
-
+              
     # Service   
     with ui.tab_panel(service):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -435,9 +433,9 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
 
                         with ui.card().classes('w-full'):
                             # Facebook
-                            ui.chip('Facebook', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506/user/1489153663/", new_tab=True)).classes("w-1/2")
+                            ui.chip('Facebook', icon='bookmark', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506/user/1489153663/", new_tab=True)).classes("w-1/2")
                             # -
-                            ui.chip('FB Group', icon='bookmark', color='blue', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506", new_tab=True)).classes("w-1/2")
+                            ui.chip('FB Group', icon='bookmark', on_click=lambda: ui.navigate.to("https://www.facebook.com/groups/977201906612506", new_tab=True)).classes("w-1/2")
                                                   
     # Settings
     with ui.tab_panel(settings):
@@ -476,7 +474,7 @@ with ui.tab_panels(tabs, value=settings).classes('w-full'):
                         with ui.carousel_slide().classes('p-0'):
                             ui.image('images/background/14.png').classes('w-[500px] h-[500px]')
                             ui.button('Select', on_click=bg_changer.close)
-                ui.button('Open a dialog', on_click=bg_changer.open)
+                ui.button('Select background', on_click=bg_changer.open)
 
         
 #Interface runing command

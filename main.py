@@ -104,10 +104,10 @@ with ui.tabs().classes('w-full') as tabs:
     playful_aibo = ui.tab('Playfull Aibo').style('font-size: 200%; font-weight: 1000')
     service = ui.tab('Service / Repair').style('font-size: 200%; font-weight: 1000')
     settings = ui.tab('Settings').style('font-size: 200%; font-weight: 1000')
-
+    about = ui.tab('About').style('font-size: 200%; font-weight: 1000')
 
 # Tab Panels
-with ui.tab_panels(tabs, value=home).classes('w-full'):
+with ui.tab_panels(tabs, value=about).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -231,42 +231,7 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
 
             
         # Team loadout 
-        with ui.card().classes("w-full opacity-95"):
-            
-            ui.label('Our Team:').style('font-weight: 1000')
-
-            with ui.row().classes('grid grid-cols-8 gap-4 w-full'):
-                with ui.card().classes('opacity-full'):
-                    with ui.image('images/apt.png').props('fit=scale-down'):
-                        ui.tooltip('AptitudeX').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-                    
-                with ui.card():
-                    with ui.image('images/DoggiesGalore.png').props('fit=scale-down'):
-                        ui.tooltip('DoggiesGalore').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-
-                with ui.card():
-                    with ui.image('images/ouija.png').props('fit=scale-down'):
-                        ui.tooltip('Ouija').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-                
-                with ui.card():
-                    with ui.image('images/unitronix.png').props('fit=scale-down'):
-                        ui.tooltip('UNITRONIX').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-
-                with ui.card():
-                    with ui.image('images/sylva.png').props('fit=scale-down'):
-                        ui.tooltip('I Forgor').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-
-                with ui.card():
-                    with ui.image('images/enfair.png').props('fit=scale-down'):
-                        ui.tooltip('Enfair Automata').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-                with ui.card():
-                    with ui.image('images/ebi.png').props('fit=scale-down'):
-                        ui.tooltip('Ebi (AiboWhisperer)').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-                
-                with ui.card():
-                    with ui.image('images/virtual_paws.png').props('fit=scale-down'):
-                        ui.tooltip('Virtual Paws').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
-
+       
     # Controls
     with ui.tab_panel(controls):
         ui.label('Control Panel').style('font-size: 200%; font-weight: 1000')
@@ -409,8 +374,7 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
 
                     with ui.tab_panel('toy_shop'):
                         ui.label('Second tab')    
-
-              
+      
     # Service   
     with ui.tab_panel(service):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -475,8 +439,50 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                             ui.image('images/background/14.png').classes('w-[500px] h-[500px]')
                             ui.button('Select', on_click=bg_changer.close)
                 ui.button('Select background', on_click=bg_changer.open)
+    
+    # About
+    with ui.tab_panel(about):
+        with ui.card():
+            ui.label('Made with love by AiboLabs').style('font-size: 150%')
+            ui.label('Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
+            
+        with ui.card().classes("w-full opacity-95"):
+            
+            ui.label('Our Team:').style('font-weight: 1000; font-size: 130%')
 
-        
+            with ui.row().classes('grid grid-cols-4 gap-4 w-full'):
+                with ui.card().classes('opacity-full'):
+                    with ui.image('images/apt.png').props('fit=scale-down'):
+                        ui.tooltip('AptitudeX').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+                    
+                with ui.card():
+                    with ui.image('images/DoggiesGalore.png').props('fit=scale-down'):
+                        ui.tooltip('DoggiesGalore').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+
+                with ui.card():
+                    with ui.image('images/ouija.png').props('fit=scale-down'):
+                        ui.tooltip('Ouija').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+                
+                with ui.card():
+                    with ui.image('images/unitronix.png').props('fit=scale-down'):
+                        ui.tooltip('UNITRONIX').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+
+                with ui.card():
+                    with ui.image('images/sylva.png').props('fit=scale-down'):
+                        ui.tooltip('I Forgor').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+
+                with ui.card():
+                    with ui.image('images/enfair.png').props('fit=scale-down'):
+                        ui.tooltip('Enfair Automata').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+                
+                with ui.card():
+                    with ui.image('images/ebi.png').props('fit=scale-down'):
+                        ui.tooltip('Eberhard Ebi Suess').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+                
+                with ui.card():
+                    with ui.image('images/virtual_paws.png').props('fit=scale-down'):
+                        ui.tooltip('Virtual Paws').classes('bg-green').style('font-weight: 1000; font-size: 130%;')
+
 #Interface runing command
 ui.run(title='AiboLabs Aibo Toolkit')
 

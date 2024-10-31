@@ -76,6 +76,8 @@ background_image_set = 'images/background/35.png' # Background image
 
 aibo_coins = '3000' #Aibo Coins
 
+aibo_lvl = 1
+
 if os.path.exists('data.pkl'):
     print('File exist')
 else:
@@ -107,7 +109,7 @@ with ui.tabs().classes('w-full') as tabs:
     about = ui.tab('About').style('font-size: 200%; font-weight: 1000')
 
 # Tab Panels
-with ui.tab_panels(tabs, value=about).classes('w-full'):
+with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -135,9 +137,11 @@ with ui.tab_panels(tabs, value=about).classes('w-full'):
                         ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%')
                         with ui.row().classes('grid grid-cols-1 w-full'):
                             #aibo coins icon
-                            ui.label('Lvl: 1').style('font-weight: 1000; font-size: 120%')
+                            with ui.row():
+                                ui.label('Level:')
+                                ui.label(aibo_lvl)
                             #aibo coins amount with variable
-                            ui.linear_progress()
+                            ui.linear_progress(value=0.5)
 
                 #Update card
                 with ui.card().classes('w-full'):
@@ -303,35 +307,38 @@ with ui.tab_panels(tabs, value=about).classes('w-full'):
                         ui.button('Close', on_click=dialog.close)
 
                     #aibo Vitals
-                    with ui.card().classes('w-full'):
-                        ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
-                        with ui.row().classes('grid grid-cols-3 w-full'):
+                    with ui.row().classes('grid grid-cols-2 w-full'):
+                            with ui.card().classes('w-full'):
+                                ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
+                                with ui.row().classes('grid grid-cols-3 w-full'):
+                                
+                                    #Food
+                                    with ui.card().classes('w-full'):
+                                        with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
+                                            ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                    
+                                    #Water
+                                    with ui.card().classes('w-full'):
+                                        with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
+                                            ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                    
+                                    #Love
+                                    with ui.card().classes('w-full'):
+                                        with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
+                                            ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
 
-                            #Food
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
-                                    ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                            with ui.card().classes('w-full h-full'):
+                                ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
                             
-                            #Water
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
-                                    ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
-                            
-                            #Love
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
-                                    ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
-                 #left card
+                                with ui.row():
+                                    #aibo coins icon
+                                    ui.icon('paid', color='primary').classes('text-5xl')
+                                    #aibo coins amount with variable
+                                    ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%')
+                    #left card
             with ui.card().classes('opacity-95 h-full'):
                 #aibo coins
-                with ui.card().classes('w-full'):
-                    ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
-                    
-                    with ui.row():
-                        #aibo coins icon
-                        ui.icon('paid', color='primary').classes('text-5xl')
-                        #aibo coins amount with variable
-                        ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%')
+                
 
                 #playful tab menu with shops        
                 with ui.tabs().classes('w-full') as playful_tabs:
@@ -343,9 +350,9 @@ with ui.tab_panels(tabs, value=about).classes('w-full'):
                     with ui.tab_panel('restaurant').classes('h-full'):
                         
                         with ui.row().classes('grid grid-cols-1 w-full'):
-                            with ui.scroll_area().classes('w-full'):
+
                                 #Big Meal
-                                with ui.card().classes('w-full').style('height: 100%'):
+                                with ui.card().classes('w-full'):
                                     with ui.row().classes('grid grid-cols-2 w-full'):
                                         ui.icon('fastfood', color='primary').classes('w-full h-full text-8xl')
                                         with ui.card():
@@ -442,9 +449,13 @@ with ui.tab_panels(tabs, value=about).classes('w-full'):
     
     # About
     with ui.tab_panel(about):
+        ui.image(background_image_set).classes('absolute inset-0')
         with ui.card():
             ui.label('Made with love by AiboLabs').style('font-size: 150%')
             ui.label('Aibo Toolkit').style('font-size: 200%; font-weight: 1000')
+            ui.separator()
+            ui.label('Our Github')
+            ui.chip('ERS Labolatories Github', icon='ads_click', on_click=lambda: ui.navigate.to("https://github.com/ers-laboratories/Aibo-Toolkit/tree/main", new_tab=True)).style('font-size: 150%')
             
         with ui.card().classes("w-full opacity-95"):
             

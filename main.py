@@ -11,14 +11,16 @@ from datetime import date
 import pickle
 from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
+import shutil
+from datetime import datetime
 
-# Create data file
 
 
 #Font add module for NiceGui
 app.add_static_file(local_file='fonts/Comfortaa.ttf', url_path='/fonts/Comfortaa.ttf')
 
 app.add_static_files('/images/background', '.')
+app.add_static_files('/images/profile', '.')
 
 ui.query('.nicegui-content').classes('w-full')
 ui.query('.q-page').classes('flex')
@@ -30,17 +32,68 @@ daily_message_list = ["I'm up and running!","All systems are a go!","Ready to as
 
 aibo_daily_message = random.choice(daily_message_list) # Aibo daily message under his image
 
-# Variables for some functions in app
-
+today = date.today()
 # mobile layout enable/disable
 
 ml_switch = ['grid grid-cols-1 w-full opacity-95', 'grid grid-cols-2 w-full opacity-95', 'grid grid-cols-3 w-full opacity-95']
 
+#Hidden elements by fake variable 
+y = {'value':False}
+
+test_bind = ui.input(value=1).bind_visibility_from(y, 'value')
+
+#Pickle variables loading module
+
+if os.path.exists('data.pkl'):
+    print("File exists")
+    with open('data.pkl', 'rb') as file: 
+        aibo_data = pickle.load(file) 
+
+else:
+    print("File does not exist")
+    with open('data.pkl', 'wb') as f:
+        aibo_data = {'connection': '1', 'dark_mode': True, 'aibo_image': 'images/profile/aibo_test_gif.gif', 'battery': '83%', 'connection_type': 'WI-FI', 'aibo_name': 'Aibo', 'software_ver': '5.50', 'mood': 'Neutral', 'deviceid': '', 'aibo_token': '', 'background_image_set': 'images/background/119.png', 'aibo_coins': '1500', 'aibo_lvl': '1'}
+        pickle.dump(aibo_data, f)
+        
+connection = aibo_data['connection'] # Connected status with cloud or app
+
+dark_mode = ui.dark_mode(True) # Dark mode variable
+
+aibo_image = aibo_data['aibo_image'] # Aibo profile image=
+
+battery = aibo_data['battery'] # battery amount
+
+connection_type = aibo_data['connection_type'] # connection type Wifi / Cloud
+
+aibo_name = aibo_data['aibo_name'] # Aibo name
+
+software_ver = aibo_data['software_ver'] # Software version
+
+mood = aibo_data['mood'] # Aibo Mood
+
+deviceid = aibo_data['deviceid'] # DeviceID
+
+aibo_token = aibo_data['aibo_token'] # Cloud Token
+
+background_image_set = aibo_data['background_image_set'] # Background image
+
+aibo_coins = aibo_data['aibo_coins'] #Aibo Coins
+
+aibo_lvl = aibo_data['aibo_lvl'] # Aibo main lvl
 
 home_page_layout = ml_switch[1]
 controls_layout = ''
 personalization_layout = ml_switch[1]
 service_layout = ml_switch[2]
+
+#def modules
+
+def on_upload(event):
+    file_name = event.name
+
+    src_path = event.path
+    dst_path = './images/profile' + file_name
+    shutil.copy(src_path, dst_path)
 
 def mobile_enable():
     home_page_layout = ml_switch[0]
@@ -52,38 +105,6 @@ def mobile_disable():
     personalization_layout = 'grid grid-cols-2 w-full opacity-95'
     service_layout = 'grid grid-cols-2 w-full opacity-95'
 
-connection = '1' # Connected status with cloud or app
-
-dark_mode = ui.dark_mode(True) # Dark mode variable
-
-aibo_image = "images/profile/profile.png" # Aibo profile image
-
-battery = "42%" # battery amount
-
-connection_type = "Wi-Fi" # connection type Wifi / Cloud
-
-aibo_name = "UNITRONIX" # Aibo name
-
-software_ver = "5.50 (MOD 1.3.3)" # Software version
-
-mood = "Neutral" # Aibo Mood
-
-deviceid = "" # DeviceID
-
-aibo_token = "" # Cloud Token
-
-background_image_set = 'images/background/35.png' # Background image
-
-aibo_coins = '3000' #Aibo Coins
-
-aibo_lvl = 1
-
-if os.path.exists('data.pkl'):
-    print('File exist')
-else:
-    print('File does not exist')
-    with open('data.pkl', 'wb') as file: 
-        pickle.dump(ml_switch, file)
 
 #Save variables to pickle file
 
@@ -109,7 +130,7 @@ with ui.tabs().classes('w-full') as tabs:
     about = ui.tab('About').style('font-size: 200%; font-weight: 1000')
 
 # Tab Panels
-with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
+with ui.tab_panels(tabs, value=home).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
         ui.image(background_image_set).classes('absolute inset-0')
@@ -119,6 +140,16 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                 ui.label('Welcome to aibo Toolkit').style('font-size: 200%; font-weight: 1000')
                 ui.label('Toolkit to manage your aibo ERS-1000').style('font-size: 150%')
                 # Main Grid - Welcome grid with app name - Updates timeline
+
+                with ui.row().classes('grid grid-cols-1 w-full'):
+                    with ui.card():
+                        with ui.row().classes('grid grid-cols-2 w-full'):
+
+                            ui.label(today).style('font-size: 150%; font-weight: 1000;')
+
+                            with ui.label().style('font-size: 150%; font-weight: 1000;') as label:
+                                ui.timer(1.0, lambda: label.set_text(f'{datetime.now():%X}'))
+                            
                             
                 #aibo coins and lvl
                 with ui.row().classes('grid grid-cols-2 w-full'):
@@ -139,7 +170,7 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                             #aibo coins icon
                             with ui.row():
                                 ui.label('Level:')
-                                ui.label(aibo_lvl)
+                                ui.label('').bind_text_from(globals(), 'aibo_lvl')
                             #aibo coins amount with variable
                             ui.linear_progress(value=0.5)
 
@@ -158,21 +189,22 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                                         ui.label('Stability update')
                                         ui.label('Security update')
                     ui.button('Check Updates', on_click=lambda: ui.notify('You are using the latest version of the software'))
+
             # ERS 1000 Stats            
             with ui.card().classes('opacity-95'):
-                    ui.label("Aibo stats:").style('font-size: 200%; font-weight: 1000')
+                    ui.label("Your aibo:").style('font-size: 200%; font-weight: 1000')
                     ui.chat_message(aibo_daily_message).style('font-size: 150%')
 
                     #aibo image scaling
                     with ui.card().classes('w-full justify-center').style('text-align: center'):
-                        with ui.row().classes('grid grid-cols-2 w-full'):
+                        with ui.row().classes('grid grid-cols-1 w-full'):
                             ui.image(aibo_image).props('fit=scale-down').classes('rounded-full ')
 
                     with ui.dialog() as dialog, ui.card():
                         # Profile image upload and change 
-                        ui.upload(on_upload=lambda e: ui.notify(f'Uploaded {e.name}'),
+                        ui.upload(on_upload=on_upload,
                         on_rejected=lambda: ui.notify('Rejected!'),
-                        max_file_size=10_000_000).classes('max-w-full').props("accept=.png")
+                        max_file_size=10_000_000).classes('max-w-full').props('accept=".jpeg,.jpg,.png"')
                         ui.button('Close', on_click=dialog.close)
                     ui.button('Change image', on_click=dialog.open).style('font-weight: 1000')
 
@@ -315,17 +347,17 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                                     #Food
                                     with ui.card().classes('w-full'):
                                         with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
-                                            ui.button(icon='local_dining', on_click=lambda: food_progress.set_value(food_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                            ui.icon('local_dining', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
                                     
                                     #Water
                                     with ui.card().classes('w-full'):
                                         with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
-                                            ui.button(icon='water_drop', on_click=lambda: water_progress.set_value(water_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                            ui.icon('water_drop', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
                                     
                                     #Love
                                     with ui.card().classes('w-full'):
                                         with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
-                                            ui.button(icon='favorite', on_click=lambda: love_progress.set_value(love_progress.value + 0.1)).props('flat round').classes('w-full h-full')
+                                            ui.icon('favorite', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
 
                             with ui.card().classes('w-full h-full'):
                                 ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
@@ -419,9 +451,7 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
                 ui.separator() # separator ui
 
                 #Mobile layout switch    
-                with ui.dropdown_button('Interface Mode'):
-                    ui.item('Desktop', on_click=lambda: (ui.notify('Desktop Mode is Enabled!'),mobile_enable))
-                    ui.item('Mobile', on_click=lambda: ui.notify('Mobile Mode is Enabled!'))
+                with ui.toggle({1: 'Desktop', 2: 'Mobile'}).bind_value(test_bind, 'value'):
                     ui.tooltip('Enable mobile layout for smartphones').classes('bg-green')
                     
                 ui.separator() # separator ui
@@ -456,6 +486,13 @@ with ui.tab_panels(tabs, value=playful_aibo).classes('w-full'):
             ui.separator()
             ui.label('Our Github')
             ui.chip('ERS Labolatories Github', icon='ads_click', on_click=lambda: ui.navigate.to("https://github.com/ers-laboratories/Aibo-Toolkit/tree/main", new_tab=True)).style('font-size: 150%')
+
+        with ui.card():
+            ui.label('Resources:').style('font-size: 150%')
+            ui.separator()
+            ui.label('Our Github')
+            ui.chip('Gifs Page', icon='ads_click', on_click=lambda: ui.navigate.to("https://www.flaticon.com/", new_tab=True)).style('font-size: 150%')
+            ui.chip('Icons and fonts', icon='ads_click', on_click=lambda: ui.navigate.to("https://fonts.google.com/icons", new_tab=True)).style('font-size: 150%')\
             
         with ui.card().classes("w-full opacity-95"):
             

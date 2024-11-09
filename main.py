@@ -13,7 +13,7 @@ from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
 import shutil
 from datetime import datetime
-from device_detector import DeviceDetector #pip install device_detector
+#from device_detector import DeviceDetector #pip install device_detector
 import time
 
 #Font add module for NiceGui

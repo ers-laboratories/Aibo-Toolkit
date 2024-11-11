@@ -146,7 +146,8 @@ with ui.tabs().classes('w-full') as tabs:
     home = ui.tab('Main Page', icon='home').style('font-size: 200%; font-weight: 1000')
     controls = ui.tab('Controls', icon='sports_esports').style('font-size: 200%; font-weight: 1000')
     personalization = ui.tab('Personalization', icon='brush').style('font-size: 200%; font-weight: 1000')
-    playful_aibo = ui.tab('Playfull Aibo', icon='hotel_class').style('font-size: 200%; font-weight: 1000')
+    playful_aibo = ui.tab('Playful Aibo', icon='queue_music').style('font-size: 200%; font-weight: 1000')
+    careful_aibo = ui.tab('Caring Aibo', icon='hotel_class').style('font-size: 200%; font-weight: 1000')
     service = ui.tab('Service / Repair', icon='build').style('font-size: 200%; font-weight: 1000')
     settings = ui.tab('Settings', icon='settings').style('font-size: 200%; font-weight: 1000')
     about = ui.tab('About', icon='info').style('font-size: 200%; font-weight: 1000')
@@ -354,7 +355,17 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                                 ui.label('Global Japanese for Aibo')
                                 ui.button('Apply', on_click=lambda: ui.notify('Japanese language applied to Aibo'))
     
-    # Playful Aibo
+    # New playful aibo tab
+    with ui.tab_panel(playful_aibo):
+        ui.image(background_image_set).classes('absolute inset-0')
+        with ui.row().classes('grid grid-cols-2 w-full'):
+            with ui.card():
+                ui.label('Default dance #1').style('font-size: 150%; font-weight: 1000')
+                ui.separator()
+                with ui.expansion('More info', icon='music_note').classes('w-full'):
+                    ui.label('Rich desc..').style('font-size: 110%; font-weight: 500')
+
+    # Caring Aibo Tab
     with ui.tab_panel(playful_aibo):
         ui.image(background_image_set).classes('absolute inset-0')
         with ui.row().classes('grid grid-cols-1 w-full') as home_row:          
@@ -504,7 +515,7 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                     with ui.carousel(animated=True, arrows=True, navigation=True):
                         with ui.carousel_slide().classes('p-0'):
                             ui.image('images/background/35.png').classes('w-[500px] h-[500px]')
-                            ui.button('Select', on_click=bg_changer.close)
+                            ui.button('Select', on_click=bg_changer.close).classes('w-full')
                         with ui.carousel_slide().classes('p-0'):
                             ui.image('images/background/116.png').classes('w-[500px] h-[500px]')
                             ui.button('Select', on_click=bg_changer.close)

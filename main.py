@@ -16,6 +16,8 @@ from datetime import datetime
 #from device_detector import DeviceDetector #pip install device_detector
 import time
 
+#pip install pywebview
+
 #Font add module for NiceGui
 app.add_static_file(local_file='fonts/Comfortaa.ttf', url_path='/fonts/Comfortaa.ttf')
 
@@ -46,10 +48,11 @@ if os.path.exists('data.pkl'):
 else:
     print("File does not exist")
     with open('data.pkl', 'wb') as f:
-        aibo_data = {'connection': '1', 'dark_mode': True, 'aibo_image': 'images/profile/aibo_test_gif.gif', 'battery': '83%', 'connection_type': 'WI-FI', 'aibo_name': 'Aibo', 'software_ver': '5.50', 'mood': 'Neutral', 'deviceid': '', 'aibo_token': '', 'background_image_set': 'images/background/119.png', 'aibo_coins': '1500', 'aibo_lvl': 1, 'layout': 0}
+        aibo_data = {'connection': '1', 'dark_mode': True, 'aibo_image': 'images/profile/aibo_test_gif.gif', 'battery': '83%', 'connection_type': 'WI-FI', 'aibo_name': 'Aibo', 'software_ver': '5.50', 'mood': 'Neutral', 'deviceid': '', 'aibo_token': '', 'background_image_set': 'images/background/119.png', 'aibo_coins': '1500', 'aibo_lvl': 1, 'layout': 0, 'global_primary_color': '#6E93D6'}
         pickle.dump(aibo_data, f)
 
-
+#Global color apply
+ui.colors(primary=aibo_data['global_primary_color'])
         
 connection = aibo_data['connection'] # Connected status with cloud or app
 
@@ -86,7 +89,7 @@ if gui_layout == 0:
     home_page_layout = ml_switch[1]
     controls_layout = ''
     personalization_layout = ml_switch[1]
-    service_layout = ml_switch[2]
+    service_layout = ml_switch[1]
 
 elif gui_layout == 1:
     print('Mobile layout enabled')
@@ -95,29 +98,36 @@ elif gui_layout == 1:
     personalization_layout = ml_switch[0]
     service_layout = ml_switch[0]
 
-#Set new laout value
+#Set new laout value and restart module
 def layout_mod(layout_value):
     print('Change layout preset')
     #set new value to layout data
     aibo_data['layout'] = layout_value
     #save all changes to pickle
-    ui.notify('Changing interface')
+    ui.notify('Changing interface...')
     with open('data.pkl', 'wb') as f:
         pickle.dump(aibo_data, f)
     #reload interface
-    ui.navigate.reload()
     os.utime('main.py')
     
-#Restart module
+#Save global primary color to pickle
+def change_global_color(value):
+    print('global_color_change')
+    aibo_data['global_primary_color'] = value
+    with open('data.pkl', 'wb') as f:
+        pickle.dump(aibo_data, f)
+    os.utime('main.py')
 
+#Upload image as profile (not working yet)
+def on_upload(file):
+    profile_dir = 'images/profile'
 
-def on_upload(event):
-    file_name = event.name
+    data = file.read()
 
-    src_path = event.path
-    dst_path = './images/profile' + file_name
-    shutil.copy(src_path, dst_path)
-
+    with open(os.path.join(profile_dir, file.name), 'wb') as f:
+        f.write(data)
+    ui.notify(f"Plik {file.name} został pomyślnie przesłany.")
+    full_file_name = 'images/profile'+{file.name}
 
 
 
@@ -203,7 +213,8 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
 
             # ERS 1000 Stats            
             with ui.card().classes('opacity-95'):
-                    ui.label("Your aibo:").style('font-size: 200%; font-weight: 1000')
+                    ui.label("Your aibo: ").style('font-size: 150%; font-weight: 1000')
+                    ui.label(aibo_data['aibo_name']).style('font-size: 250%; font-weight: 1000')
                     ui.chat_message(aibo_daily_message).style('font-size: 150%')
 
                     #aibo image scaling
@@ -431,7 +442,7 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
         with ui.card().classes("w-full text-center"):
             ui.label('Find Aibo Repair Service:').style('font-size: 200%; font-weight: 1000')
             #ebi card
-        with ui.row().classes('grid grid-cols-2 w-full opacity-95'): 
+        with ui.row().classes(service_layout): 
             with ui.card():
                 ui.label("Eberhard Ebi Suess").style('font-size: 200%; font-weight: 1000')
                 ui.label("Europe: Germany").style('font-size: 130%; font-weight: 1000')
@@ -461,20 +472,21 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
 
                 ui.separator() # separator ui
 
-                #Mobile layout switch    
+                #Mobile layout switch
+                ui.label('GUI Mode Switch').style('font-size: 130%; font-weight: 500')
                 with ui.toggle({0: 'Desktop', 1: 'Mobile'}, value=gui_layout, on_change=lambda e: layout_mod(layout_value=e.value)) as layout_switch:
                     ui.tooltip('Enable mobile layout for smartphones').classes('bg-green')
                     
                 ui.separator() # separator ui
 
                 #GUI Primary color changer
-                ui.label('GUI Primary color')
+                ui.label('GUI Primary color').style('font-size: 130%; font-weight: 500')
                 with ui.button(icon='colorize'):
-                    ui.color_picker(on_pick=lambda e: ui.colors(primary =f'{e.color}'))
+                    ui.color_picker(on_pick=lambda e: (ui.colors(primary =f'{e.color}'), change_global_color(value=e.color)))
 
                 ui.separator() # separator ui
 
-                ui.label('Change Background image')
+                ui.label('Change Background image').style('font-size: 130%; font-weight: 500')
                 with ui.dialog() as bg_changer, ui.card():
                     with ui.carousel(animated=True, arrows=True, navigation=True):
                         with ui.carousel_slide().classes('p-0'):

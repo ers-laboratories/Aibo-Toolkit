@@ -48,7 +48,7 @@ if os.path.exists('data.pkl'):
 else:
     print("File does not exist")
     with open('data.pkl', 'wb') as f:
-        aibo_data = {'connection': '1', 'dark_mode': True, 'aibo_image': 'images/profile/aibo_test_gif.gif', 'battery': '83%', 'connection_type': 'WI-FI', 'aibo_name': 'Aibo', 'software_ver': '5.50', 'mood': 'Neutral', 'deviceid': '', 'aibo_token': '', 'background_image_set': 'images/background/119.png', 'aibo_coins': '1500', 'aibo_lvl': 1, 'layout': 0, 'global_primary_color': '#6E93D6'}
+        aibo_data = {'connection': '1', 'dark_mode': True, 'aibo_image': 'images/profile/profile.png', 'battery': '83%', 'connection_type': 'WI-FI', 'aibo_name': 'Aibo', 'software_ver': '5.50', 'mood': 'Neutral', 'deviceid': '', 'aibo_token': '', 'background_image_set': 'images/background/119.png', 'aibo_coins': '1500', 'aibo_lvl': 1, 'layout': 0, 'global_primary_color': '#6E93D6'}
         pickle.dump(aibo_data, f)
 
 #Global color apply
@@ -141,153 +141,165 @@ ui.add_head_html('''
 </style>
 ''')
 
+#Tab panel (nav-bar)
 with ui.tabs().classes('w-full') as tabs:
-    home = ui.tab('Main Page').style('font-size: 200%; font-weight: 1000')
-    controls = ui.tab('Controls').style('font-size: 200%; font-weight: 1000')
-    personalization = ui.tab('Personalization').style('font-size: 200%; font-weight: 1000')
-    playful_aibo = ui.tab('Playfull Aibo').style('font-size: 200%; font-weight: 1000')
-    service = ui.tab('Service / Repair').style('font-size: 200%; font-weight: 1000')
-    settings = ui.tab('Settings').style('font-size: 200%; font-weight: 1000')
-    about = ui.tab('About').style('font-size: 200%; font-weight: 1000')
+    home = ui.tab('Main Page', icon='home').style('font-size: 200%; font-weight: 1000')
+    controls = ui.tab('Controls', icon='sports_esports').style('font-size: 200%; font-weight: 1000')
+    personalization = ui.tab('Personalization', icon='brush').style('font-size: 200%; font-weight: 1000')
+    playful_aibo = ui.tab('Playfull Aibo', icon='hotel_class').style('font-size: 200%; font-weight: 1000')
+    service = ui.tab('Service / Repair', icon='build').style('font-size: 200%; font-weight: 1000')
+    settings = ui.tab('Settings', icon='settings').style('font-size: 200%; font-weight: 1000')
+    about = ui.tab('About', icon='info').style('font-size: 200%; font-weight: 1000')
+
+#Full app interface
 
 # Tab Panels
 with ui.tab_panels(tabs, value=home).classes('w-full'):
     # Home tab Module
     with ui.tab_panel(home):
-        ui.image(background_image_set).classes('absolute inset-0')
-        with ui.row().classes(home_page_layout) as home_row:
-            with ui.card().classes('opacity-95 h-full'):
-                # Main Grid - Welcome grid with app name
-                ui.label('Welcome to aibo Toolkit').style('font-size: 200%; font-weight: 1000')
-                ui.label('Toolkit to manage your aibo ERS-1000').style('font-size: 150%')
-                # Main Grid - Welcome grid with app name - Updates timeline
-
-                with ui.row().classes('grid grid-cols-1 w-full'):
+        with ui.row().classes(home_page_layout):
+            ui.image(background_image_set).classes('absolute inset-0')
+            with ui.row().classes('grid grid-cols-1 w-full opacity-95') as home_row:
+                    # Main Grid - Welcome grid with app name
                     with ui.card():
-                        with ui.row().classes('grid grid-cols-2 w-full'):
+                        ui.label('Welcome to aibo Toolkit').style('font-size: 200%; font-weight: 1000')
+                        ui.label('Toolkit to manage your aibo ERS-1000').style('font-size: 150%')
+                    # Main Grid - Welcome grid with app name - Updates timeline
 
-                            ui.label(today).style('font-size: 150%; font-weight: 1000;')
+                    with ui.row().classes('grid grid-cols-1 w-full'):
+                        with ui.card():
+                            with ui.row().classes('grid grid-cols-2 w-full'):
 
-                            with ui.label().style('font-size: 150%; font-weight: 1000;') as label:
-                                ui.timer(1.0, lambda: label.set_text(f'{datetime.now():%X}'))
-                            
-                            
-                #aibo coins and lvl
-                with ui.row().classes('grid grid-cols-2 w-full'):
+                                ui.label(today).style('font-size: 150%; font-weight: 1000;').classes('text-center')
 
-                    #aibo coins
-                    with ui.card().classes('w-full h-full'):
-                        ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
-                        with ui.row():
-                            #aibo coins icon
-                            ui.icon('paid', color='primary').classes('text-5xl')
-                            #aibo coins amount with variable
-                            ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%;')
-
-                    #aibo lvl
-                    with ui.card().classes('w-full h-full'):
-                        ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%')
-                        with ui.row().classes('grid grid-cols-1 w-full'):
-                            #aibo coins icon
-                            with ui.row():
-                                ui.label('Level:')
-                                ui.label('').bind_text_from(globals(), 'aibo_lvl')
-                            #aibo coins amount with variable
-                            ui.linear_progress(value=0.5)
-
-                #Update card
-                with ui.card().classes('w-full'):
-                    ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
-                    with ui.row():
-                        ui.icon('task_alt', color='green').classes('text-5xl')
-
-                    with ui.list().props('dense separator'):
-                        ui.item('You are using the latest version of the software').style('font-weight: 1000')
-                        ui.item('Firmware version: 5.50 MOD')
-                        ui.item('App version: 0.8')
-
-                    with ui.expansion('Release Notes', icon='work').classes('w-full'):
-                                        ui.label('Stability update')
-                                        ui.label('Security update')
-                    ui.button('Check Updates', on_click=lambda: ui.notify('You are using the latest version of the software'))
-
-            # ERS 1000 Stats            
-            with ui.card().classes('opacity-95'):
-                    ui.label("Your aibo: ").style('font-size: 150%; font-weight: 1000')
-                    ui.label(aibo_data['aibo_name']).style('font-size: 250%; font-weight: 1000')
-                    ui.chat_message(aibo_daily_message).style('font-size: 150%')
-
-                    #aibo image scaling
-                    with ui.card().classes('w-full justify-center').style('text-align: center'):
-                        with ui.row().classes('grid grid-cols-1 w-full'):
-                            ui.image(aibo_image).props('fit=scale-down').classes('rounded-full ')
-
-                    with ui.dialog() as dialog, ui.card():
-                        # Profile image upload and change 
-                        ui.upload(on_upload=on_upload,
-                        on_rejected=lambda: ui.notify('Rejected!'),
-                        max_file_size=10_000_000).classes('max-w-full').props('accept=".jpeg,.jpg,.png"')
-                        ui.button('Close', on_click=dialog.close)
-                    ui.button('Change image', on_click=dialog.open).style('font-weight: 1000')
-
-                    #aibo Vitals
-                    with ui.card().classes('w-full'):
-                        ui.label("Vitals:").style('font-size: 150%; font-weight: 1000')
-                        with ui.row().classes('grid grid-cols-3 w-full'):
-                            #Food
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
-                                    ui.icon('local_dining', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
-                            #Water
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
-                                    ui.icon('water_drop', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
-                            #Love
-                            with ui.card().classes('w-full'):
-                                with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
-                                    ui.icon('favorite', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
-                    
-                    #aibo stats card
-                    with ui.card().classes('w-full'):
-                        with ui.grid(columns=2):
-                            #-
-                            # Connection status checker - IF
-                            if connection == '1':
-                                ui.label('Connected').style('font-weight: 1000; color: green')
-                                ui.label('')
+                                with ui.label().style('font-size: 150%; font-weight: 1000;').classes('text-center') as label:
+                                    ui.timer(1.0, lambda: label.set_text(f'{datetime.now():%X}'))
                                 
-                            elif connection == '0':
-                                ui.label('Disconnected').style('font-weight: 1000; color: red')
-                                ui.label('')
-                            # Connection type box
-                            ui.label('Connection type:').style('font-weight: 1000')
-                            ui.label(connection_type)
-                            # -
-                            # Aibo Name box
-                            ui.label('Name:').style('font-weight: 1000')
-                            ui.label(aibo_name)
-                            # -
-                            # Battery box
-                            ui.label('Battery:').style('font-weight: 1000')
-                            ui.label(battery)
-                            # -
-                            # Aibo software box
-                            ui.label('Software:').style('font-weight: 1000')
-                            ui.label(software_ver)
+                                
+                    #aibo coins and lvl
+                    with ui.row().classes('grid grid-cols-2 w-full'):
 
-                            ui.label('Mood:').style('font-weight: 1000')
-                            ui.label(mood)
+                        #aibo coins
+                        with ui.card().classes('w-full h-full'):
+                            ui.label('Aibo Coins:').style('font-weight: 1000; font-size: 120%')
+                            with ui.row():
+                                #aibo coins icon
+                                ui.icon('paid', color='primary').classes('text-5xl')
+                                #aibo coins amount with variable
+                                ui.label(aibo_coins).style('font-weight: 1000; font-size: 230%;')
 
-                            ui.separator() # separator ui
-                            ui.label()
+                        #aibo lvl
+                        with ui.card().classes('w-full h-full'):
+                            ui.label('Aibo Level:').style('font-weight: 1000; font-size: 120%')
+                            with ui.row().classes('grid grid-cols-1 w-full'):
+                                #aibo coins icon
+                                with ui.row():
+                                    ui.label('Level:')
+                                    ui.label('').bind_text_from(globals(), 'aibo_lvl')
+                                #aibo coins amount with variable
+                                ui.linear_progress(value=0.5)
 
-                            ui.chip('Device ID', icon='content_copy', on_click=lambda: ui.clipboard.write(deviceid)).style('font-weight: 1000')
+                    #Update card
+                    with ui.card().classes('w-full'):
+                        ui.label('Check Updates:').style('font-weight: 1000; font-size: 120%')
+                        with ui.row():
+                            ui.icon('task_alt', color='green').classes('text-5xl')
 
-                            ui.chip('Cloud Token', icon='content_copy', on_click=lambda: ui.clipboard.write(aibo_token)).style('font-weight: 1000')
-                            async def read() -> None:
-                                ui.notify(await ui.clipboard.read())
+                        with ui.list().props('dense separator'):
+                            ui.item('You are using the latest version of the software').style('font-weight: 1000')
+                            ui.item('Firmware version: '+ aibo_data['software_ver'])
+                            ui.item('App version: 0.8')
+                        ui.button('Check Updates', on_click=lambda: ui.notify('You are using the latest version of the software'))
 
-            
+                # ERS 1000 Stats            
+            with ui.row().classes('grid grid-cols-1 w-full opacity-95'):
+                with ui.card():
+                    with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+                        with ui.row().classes('grid grid-cols-1 w-full opacity-95'):
+                            ui.label("Your aibo: ").style('font-size: 150%; font-weight: 1000')
+                            ui.label(aibo_data['aibo_name']).style('font-size: 250%; font-weight: 1000').classes('text-center')
+                            ui.chat_message(aibo_daily_message).style('font-size: 150%')
+
+                        #aibo image scaling
+                        #with ui.card().classes('w-full justify-center').style('text-align: center'):
+                        # with ui.row().classes('grid grid-cols-1 w-full'):
+                        ui.image(aibo_image).props('fit=scale-down').classes('rounded-full ')
+
+                        #with ui.dialog() as dialog, ui.card():
+                            # Profile image upload and change 
+                            #ui.upload(on_upload=on_upload,
+                            #on_rejected=lambda: ui.notify('Rejected!'),
+                            #max_file_size=10_000_000).classes('max-w-full').props('accept=".jpeg,.jpg,.png"')
+                            #ui.button('Close', on_click=dialog.close)
+                        #ui.button('Change image', on_click=dialog.open).style('font-weight: 1000')
+
+                        #aibo Vitals
+                    
+                    with ui.expansion('Vitals', icon='bar_chart').classes('w-full text-2xl'):
+                            with ui.row().classes('grid grid-cols-3 w-full'):
+                                #Food
+                                with ui.card().classes('w-full'):
+                                    with ui.circular_progress(value=0.3, show_value=False, color='orange').classes('w-full h-full items-center m-auto') as food_progress:
+                                        ui.icon('local_dining', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
+                                #Water
+                                with ui.card().classes('w-full'):
+                                    with ui.circular_progress(value=0.5, show_value=False, color='blue').classes('w-full h-full items-center m-auto') as water_progress:
+                                        ui.icon('water_drop', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
+                                #Love
+                                with ui.card().classes('w-full'):
+                                    with ui.circular_progress(value=0.8, show_value=False, color='red').classes('w-full h-full items-center m-auto') as love_progress:
+                                        ui.icon('favorite', color='primary').classes('text-2xl').props('flat round').classes('w-full h-full')
+                        
+                        #aibo stats card
+                with ui.row().classes('grid grid-cols-1 w-full opacity-95'):
+                            with ui.grid(columns=2):
+                                #-
+                                # Connection status checker - IF
+                                #if connection == '1':
+                                    #ui.label('Connected').style('font-weight: 1000; color: green')
+                                    #ui.label('')
+                                    
+                                #elif connection == '0':
+                                    #ui.label('Disconnected').style('font-weight: 1000; color: red')
+                                    #ui.label('')
+                                # Connection type box
+                                with ui.card():
+                                    with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+                                        with ui.row().classes('grid grid-cols-1 w-full opacity-95'):
+                                            ui.label('Network:').style('font-weight: 1000')
+                                            ui.label(connection_type).style('font-weight: 1000; font-size: 150%')
+                                        ui.icon('wifi', color='primary').classes('text-6xl')
+                                # -
+                                # Battery box
+                                with ui.card():
+                                     with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+                                        with ui.row().classes('grid grid-cols-1 w-full opacity-95'):
+                                            ui.label('Battery:').style('font-weight: 1000')
+                                            ui.label(battery).style('font-weight: 1000; font-size: 150%')
+                                        ui.icon('battery_full', color='primary').classes('text-6xl')
+                                # -
+                                # Aibo software box
+                                with ui.card():
+                                    with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+                                        with ui.row().classes('grid grid-cols-1 w-full opacity-95'):
+                                            ui.label('Software:').style('font-weight: 1000')
+                                            ui.label(software_ver).style('font-weight: 1000; font-size: 150%')
+                                        ui.icon('api', color='primary').classes('text-6xl')
+
+                                with ui.card():
+                                    with ui.row().classes('grid grid-cols-2 w-full opacity-95'):
+                                        with ui.row().classes('grid grid-cols-1 w-full opacity-95'):
+                                            ui.label('Mood:').style('font-weight: 1000')
+                                            ui.label(mood).style('font-weight: 1000; font-size: 150%')
+                                        ui.icon('theater_comedy', color='primary').classes('text-6xl')
+
+                                ui.chip('Device ID', icon='content_copy', on_click=lambda: ui.clipboard.write(deviceid)).style('font-weight: 1000; font-size: 150%')
+
+                                ui.chip('Cloud Token', icon='content_copy', on_click=lambda: ui.clipboard.write(aibo_token)).style('font-weight: 1000; font-size: 150%')
+                                async def read() -> None:
+                                    ui.notify(await ui.clipboard.read())
+
+                
         # Team loadout 
        
     # Controls
@@ -482,7 +494,8 @@ with ui.tab_panels(tabs, value=home).classes('w-full'):
                 #GUI Primary color changer
                 ui.label('GUI Primary color').style('font-size: 130%; font-weight: 500')
                 with ui.button(icon='colorize'):
-                    ui.color_picker(on_pick=lambda e: (ui.colors(primary =f'{e.color}'), change_global_color(value=e.color)))
+                    picker = ui.color_picker(on_pick=lambda e: (ui.colors(primary =f'{e.color}'), change_global_color(value=e.color)))
+                    picker.q_color.props('default-view=palette no-header no-footer')
 
                 ui.separator() # separator ui
 
